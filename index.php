@@ -34,6 +34,7 @@
                             <div class="mb-3">
                                 <label for="mobile" class="form-label">Mobile Number</label>
                                 <input type="tel" class="form-control" id="mobile" name="mobile" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                <input type="hidden" name="full_mobile">
                             </div>
                             <div class="mb-3">
                                 <label for="company_name" class="form-label">Company Name</label>

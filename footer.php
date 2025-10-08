@@ -88,9 +88,25 @@
 
             if (form && phoneInput) {
                 form.addEventListener("submit", function(e) {
-                    if (!phoneInput.isValidNumber()) {
+                    const countryData = phoneInput.getSelectedCountryData();
+                    let expectedLength;
+
+                    if (countryData.iso2 === 'lk') {
+                        expectedLength = 10;
+                    } else {
+                        const placeholder = phoneInput.getNumberPlaceholder();
+                        expectedLength = placeholder.replace(/\D/g, '').length;
+                    }
+
+                    const actualLength = phoneInputField.value.length;
+
+                    if (actualLength !== expectedLength) {
                         e.preventDefault();
-                        alert("Invalid phone number! Please check the number and country code.");
+                        alert(`Invalid phone number. Please enter a number with ${expectedLength} digits for the selected country.`);
+                    } else {
+                        // On valid submission, populate the hidden field with the full international number
+                        const hiddenInput = document.querySelector('[name="full_mobile"]');
+                        hiddenInput.value = phoneInput.getNumber();
                     }
                 });
             }
