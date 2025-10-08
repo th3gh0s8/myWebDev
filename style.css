@@ -161,10 +161,11 @@ body {
     position: relative; /* Establish positioning context for centered text */
 }
 
-.navbar-center-text {
+.navbar-center-logo {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    height: 50px;
 }
 
 .navbar-logo {

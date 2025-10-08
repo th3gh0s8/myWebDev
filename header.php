@@ -17,10 +17,8 @@
                 <img src="images/logo.png" alt="POWERSOFT Logo" class="navbar-logo">
             </a>
 
-            <!-- Center: Product Name (visible on larger screens) -->
-            <span class="navbar-text navbar-center-text h4 d-none d-lg-block">
-                XPOWER
-            </span>
+            <!-- Center: Product Logo (visible on larger screens) -->
+            <img src="images/xLogo.png" alt="XPOWER Logo" class="navbar-center-logo d-none d-lg-block">
 
 
         </div>
