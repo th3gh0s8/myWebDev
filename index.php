@@ -5,7 +5,7 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6 text-center text-lg-start">
-                <h1 class="display-3 fw-bold text-white mb-3">11.11 Mega Sale!</h1>
+                <h1 class="display-3 fw-bold text-white mb-3">11.11 Mega Offer!</h1>
                 <p class="lead text-white-75 mb-4">Don't miss out on our biggest promotion of the year. Limited spots available!</p>
                 <div id="countdown" class="countdown-container mb-4"></div>
                 <div class="progress-container">
@@ -20,6 +20,14 @@
             </div>
             <div class="col-lg-6 mt-5 mt-lg-0">
                 <div class="card shadow-lg">
+                    <div class="price-banner text-center text-white">
+                        <h4 class="offer-title mb-0">SPECIAL 11.11 OFFER</h4>
+                        <div class="price-content my-2">
+                            <span class="final-price">Rs 132,000</span>
+                            <span class="original-price">was Rs 165,000</span>
+                        </div>
+                        <span class="badge bg-warning text-dark rounded-pill">20% OFF</span>
+                    </div>
                     <div class="card-body p-5">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
                         <form action="process_form.php" method="POST" id="promo-form">

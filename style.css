@@ -123,6 +123,40 @@ body {
     transition: background-color 0.3s ease-in-out;
 }
 
+.original-price {
+    text-decoration: line-through;
+    font-size: 1.2rem;
+}
+
+.discounted-price {
+    margin-left: 0.5rem;
+}
+
+.price-banner {
+    background: linear-gradient(45deg, #0d6efd, #6f42c1);
+    padding: 1.5rem 1rem;
+    border-top-left-radius: var(--bs-card-inner-border-radius);
+    border-top-right-radius: var(--bs-card-inner-border-radius);
+}
+
+.price-banner .offer-title {
+    font-weight: 300;
+    letter-spacing: 1px;
+    font-size: 1rem;
+}
+
+.price-banner .final-price {
+    font-size: 2.5rem;
+    font-weight: 700;
+    display: block;
+}
+
+.price-banner .original-price {
+    font-size: 1rem;
+    text-decoration: line-through;
+    opacity: 0.75;
+}
+
 .navbar .container-fluid {
     position: relative; /* Establish positioning context for centered text */
 }
