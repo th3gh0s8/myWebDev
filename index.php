@@ -31,28 +31,32 @@
                     <div class="card-body p-5">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
                         <form action="process_form.php" method="POST" id="promo-form">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Full Name</label>
-                                <input type="text" class="form-control" id="name" name="name" required maxlength="100">
+
+                            <hr class="my-4">
+
+                            <div id="registration-forms-container" class="accordion"></div>
+
+                            <div class="d-grid my-3">
+                                <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More and Get More Discounts!</button>
                             </div>
-                            <div class="mb-3">
-                                <label for="email" class="form-label">Email Address</label>
-                                <input type="email" class="form-control" id="email" name="email" required maxlength="100">
+
+                            <div id="total-summary" class="p-3 bg-light rounded">
+                                <div class="d-flex justify-content-between">
+                                    <span>Subtotal</span>
+                                    <span id="subtotal-display">Rs 132,000</span>
+                                </div>
+                                <div class="d-flex justify-content-between text-danger">
+                                    <span>Discount</span>
+                                    <span id="discount-display">- Rs 0</span>
+                                </div>
+                                <hr>
+                                <div class="d-flex justify-content-between h4 fw-bold">
+                                    <span>Total</span>
+                                    <span id="total-price-display">Rs 132,000</span>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="mobile" class="form-label">Mobile Number</label>
-                                <input type="tel" class="form-control" id="mobile" name="mobile" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                                <input type="hidden" name="full_mobile">
-                            </div>
-                            <div class="mb-3">
-                                <label for="company_name" class="form-label">Company Name</label>
-                                <input type="text" class="form-control" id="company_name" name="company_name" maxlength="100">
-                            </div>
-                            <div class="mb-3">
-                                <label for="company_address" class="form-label">Company Address</label>
-                                <textarea class="form-control" id="company_address" name="company_address" rows="3" maxlength="255"></textarea>
-                            </div>
-                            <div class="d-grid">
+
+                            <div class="d-grid mt-4">
                                 <button type="submit" class="btn btn-primary btn-lg">Claim Offer</button>
                             </div>
                         </form>
