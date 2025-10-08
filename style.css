@@ -158,19 +158,21 @@ body {
 }
 
 .navbar .container-fluid {
-    position: relative; /* Establish positioning context for centered text */
+    position: relative;
+    /* Establish positioning context for centered text */
 }
 
 .navbar-center-logo {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    height: 50px;
+    height: 60px;
 }
 
 .navbar-logo {
     height: 50px;
-    border-radius: 3px; /* Softens the corners slightly */
+    border-radius: 3px;
+    /* Softens the corners slightly */
 }
 
 .navbar-transparent {
