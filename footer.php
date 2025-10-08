@@ -45,8 +45,8 @@
             const subtotalDisplay = document.getElementById('subtotal-display');
             const discountDisplay = document.getElementById('discount-display');
             const totalDisplay = document.getElementById('total-price-display');
-            
-            const basePrice = 132000;
+
+            const basePrice = 165000;
             let formCount = 0;
             let phoneInstances = [];
 
@@ -56,6 +56,7 @@
                 if (count === 4) return 0.10;
                 if (count === 3) return 0.075;
                 if (count === 2) return 0.05;
+                if (count === 1) return 0.20; // Apply 20% discount for single item
                 return 0;
             };
 
