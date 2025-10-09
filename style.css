@@ -244,3 +244,19 @@ body {
     top: 200px; /* Adjust as needed */
     align-self: flex-start; /* Important for sticky to work in a flex container */
 }
+
+@media (max-width: 767.98px) {
+    .countdown-container {
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .countdown-item span {
+        font-size: 1.5rem;
+    }
+
+    .hero-sticky-content {
+        position: static; /* Disable sticky on mobile */
+    }
+}
