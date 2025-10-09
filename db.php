@@ -47,6 +47,38 @@ try {
         error_log("Error loading character set utf8mb4 in db.php: " . $conn->error);
         // Depending on requirements, you might throw an Exception here too.
     }
+    
+    // Create the xuser table if it doesn't exist
+    $createXUserTable = "CREATE TABLE IF NOT EXISTS xuser (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        email VARCHAR(255) NOT NULL UNIQUE,
+        mobile VARCHAR(20),
+        company_name VARCHAR(255),
+        company_address TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    )";
+
+    if (!$conn->query($createXUserTable)) {
+        error_log("Error creating xuser table: " . $conn->error);
+    }
+
+    // Also create the registrations table for compatibility
+    $createRegistrationsTable = "CREATE TABLE IF NOT EXISTS registrations (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(100) NOT NULL,
+        mobile VARCHAR(20),
+        company_name VARCHAR(100),
+        company_address TEXT,
+        submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )";
+
+    if (!$conn->query($createRegistrationsTable)) {
+        error_log("Error creating registrations table: " . $conn->error);
+    }
+
     // If script reaches here, $conn is presumably set up successfully.
     // db.php's job is to provide $conn, not to output success JSON itself.
 
