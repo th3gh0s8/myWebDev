@@ -1,4 +1,36 @@
-<?php include 'header.php'; ?>
+<?php
+require_once 'db.php'; // Include the database connection
+
+// Initialize claimed count and progress
+$claimedCount = 0; // Will be updated from database
+$progressPercentage = 0; // Will be calculated from actual data
+$totalSpots = 200;
+
+if ($conn) {
+    try {
+        // Query to get the number of registrations from xuser table
+        $result = $conn->query("SELECT COUNT(*) as count FROM xuser");
+        if ($result) {
+            $row = $result->fetch_assoc();
+            $claimedCount = $row['count'];
+            
+            // Calculate the progress percentage
+            if ($totalSpots > 0) {
+                $progressPercentage = min(($claimedCount / $totalSpots) * 100, 100); // Cap at 100%
+            }
+        }
+        // No need to close connection here if it's used elsewhere, but if not: $conn->close();
+    } catch (Exception $e) {
+        // Log error, but don't block the page from rendering
+        error_log("Error fetching registration count in index.php: " . $e->getMessage());
+        // The page will render with default values
+        $claimedCount = 0;
+        $progressPercentage = 0;
+    }
+}
+
+include 'header.php';
+?>
 
 <!-- Hero Section -->
 <header class="hero-promotion">
@@ -10,11 +42,11 @@
                 <div id="countdown" class="countdown-container mb-4"></div>
                 <div class="progress-container">
                     <div class="progress-info d-flex justify-content-between mb-2 text-white">
-                        <span><i class="bi bi-people-fill"></i> 80 Claimed</span>
-                        <span>200 Total</span>
+                        <span><i class="bi bi-people-fill"></i> <?php echo $claimedCount; ?> Claimed</span>
+                        <span><?php echo $totalSpots; ?> Total</span>
                     </div>
                     <div class="progress" style="height: 25px;">
-                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%;" aria-valuenow="80" aria-valuemin="0" aria-valuemax="200">40% Claimed</div>
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: <?php echo $progressPercentage; ?>%;" aria-valuenow="<?php echo $claimedCount; ?>" aria-valuemin="0" aria-valuemax="<?php echo $totalSpots; ?>"><?php echo round($progressPercentage); ?>% Claimed</div>
                     </div>
                 </div>
             </div>
