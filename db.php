@@ -13,9 +13,10 @@ try {
     $username = "root";
     $password = "Pasindu@12236";
     $dbname = "washio";
+    $port = 3307;
 
-    // $username = "pw_washio";
     // $password = "washio-2025-09-27";
+    // $username = "pw_washio";
     // $dbname = "pw_washio_db";
     // $port = 3306;
 
