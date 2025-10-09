@@ -10,13 +10,14 @@ $conn = null; // Initialize $conn
 
 try {
     $servername = "localhost";
+
     $username = "root";
     $password = "Pasindu@12236";
     $dbname = "washio";
     $port = 3307;
 
-    // $password = "washio-2025-09-27";
     // $username = "pw_washio";
+    // $password = "washio-2025-09-27";
     // $dbname = "pw_washio_db";
     // $port = 3306;
 
@@ -47,7 +48,7 @@ try {
         error_log("Error loading character set utf8mb4 in db.php: " . $conn->error);
         // Depending on requirements, you might throw an Exception here too.
     }
-    
+
     // Create the xuser table if it doesn't exist
     $createXUserTable = "CREATE TABLE IF NOT EXISTS xuser (
         id INT AUTO_INCREMENT PRIMARY KEY,
