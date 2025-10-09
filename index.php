@@ -4,7 +4,7 @@
 <header class="hero-promotion">
     <div class="container">
         <div class="row align-items-center">
-            <div class="col-lg-6 text-center text-lg-start">
+            <div class="col-lg-6 text-center text-lg-start hero-sticky-content">
                 <h1 class="display-3 fw-bold text-white mb-3">11.11 Mega Offer!</h1>
                 <p class="lead text-white-75 mb-4">Don't miss out on our biggest promotion of the year. Limited spots available!</p>
                 <div id="countdown" class="countdown-container mb-4"></div>
