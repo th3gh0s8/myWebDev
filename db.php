@@ -1,75 +1,75 @@
 <?php
-// Database configuration
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', 'Pasindu@12236'); // Empty password
-define('DB_NAME', 'washio');
+ob_start(); // Start output buffering at the very beginning
+
+// Enable full error reporting (to be logged)
+error_reporting(E_ALL);
+ini_set('display_errors', 1); // Keep this 1 for debugging, change to 0 in production
+ini_set('log_errors', 1);
+
+$conn = null; // Initialize $conn
 
 try {
-    // Create MySQLi connection
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $servername = "localhost";
+    $username = "root";
+    $password = "Pasindu@12236";
+    $dbname = "washio";
+    $port = 3307;
 
-    // Check connection
-    if ($conn->connect_error) {
-        // If database doesn't exist, create it
-        $temp_conn = new mysqli(DB_HOST, DB_USER, DB_PASS);
-        if ($temp_conn->connect_error) {
-            throw new Exception("Connection failed: " . $temp_conn->connect_error);
-        }
+    // $password = "washio-2025-09-27";
+    // $username = "pw_washio";
+    // $dbname = "pw_washio_db";
+    // $port = 3306;
 
-        $sql = "CREATE DATABASE IF NOT EXISTS web_form";
-        if ($temp_conn->query($sql) === TRUE) {
-            $temp_conn->select_db('web_form');
-            $conn = $temp_conn;
-        } else {
-            throw new Exception("Error creating database: " . $temp_conn->error);
-        }
+    $db_connection_error_message = 'Connection not attempted or failed before error property set.';
+
+    $link = mysqli_init();
+    if (!$link) {
+        $db_connection_error_message = 'mysqli_init failed';
+        // error_log already happens if we throw, but good for clarity if needed
+        throw new Exception($db_connection_error_message);
     }
 
-    // Set charset
+    if (!mysqli_options($link, MYSQLI_OPT_CONNECT_TIMEOUT, 5)) {
+        error_log("Database Connection warning in db.php: Failed to set MYSQLI_OPT_CONNECT_TIMEOUT");
+        // Not throwing an exception here as it's a warning, connection might still succeed.
+    }
+
+    if (@mysqli_real_connect($link, $servername, $username, $password, $dbname, $port)) {
+        $conn = $link;
+    } else {
+        $db_connection_error_message = mysqli_connect_error();
+        // error_log already happens if we throw
+        throw new Exception("DB Connection Error: " . $db_connection_error_message);
+    }
+
     if (!$conn->set_charset("utf8mb4")) {
-        error_log("Error loading character set utf8mb4: " . $conn->error);
+        // Log this error, but don't necessarily terminate if connection itself was fine.
+        error_log("Error loading character set utf8mb4 in db.php: " . $conn->error);
+        // Depending on requirements, you might throw an Exception here too.
     }
-
-    // Create the xuser table if it doesn't exist
-    $createXUserTable = "CREATE TABLE IF NOT EXISTS xuser (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL UNIQUE,
-        mobile VARCHAR(20),
-        company_name VARCHAR(255),
-        company_address TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    )";
-
-    if (!$conn->query($createXUserTable)) {
-        throw new Exception("Error creating xuser table: " . $conn->error);
-    }
-
-    // Also create the registrations table for compatibility
-    $createRegistrationsTable = "CREATE TABLE IF NOT EXISTS registrations (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        email VARCHAR(100) NOT NULL,
-        mobile VARCHAR(20),
-        company_name VARCHAR(100),
-        company_address TEXT,
-        submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )";
-
-    if (!$conn->query($createRegistrationsTable)) {
-        throw new Exception("Error creating registrations table: " . $conn->error);
-    }
+    // If script reaches here, $conn is presumably set up successfully.
+    // db.php's job is to provide $conn, not to output success JSON itself.
 
 } catch (Exception $e) {
-    error_log("Database error in db.php: " . $e->getMessage());
-    // For development, show the error, but in production, show a generic message
-    $isDev = true; // Set to false in production
-    if ($isDev) {
-        die("Database connection failed: " . $e->getMessage());
-    } else {
-        die("Database connection failed. Please check the error logs.");
+    error_log("Exception in db.php: " . $e->getMessage() . " (Details: Server=$servername, User=$username, DB=$dbname, Port=$port)");
+
+    // Ensure no prior output interferes with JSON
+    if (ob_get_level() > 0) {
+        ob_end_clean(); // Clean any previous output buffer
     }
+
+    // Set JSON header if not already sent
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+    }
+
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'PHP DB Connection Critical: ' . $e->getMessage(),
+        'source' => 'db.php'
+    ]);
+    exit; // Stop script execution after sending JSON error
 }
+// No ob_end_flush() here, as db.php is included.
+// The script that includes it (e.g., request_otp.php) will handle the final output.
 ?>
