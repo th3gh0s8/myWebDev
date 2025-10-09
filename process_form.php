@@ -42,45 +42,31 @@ foreach ($registrations as $key => $reg) {
     }
 }
 
-// Insert registrations into both the xuser and registrations tables
+// Insert registrations only into the xuser table
 $successfulInserts = 0;
 try {
     // The connection $conn is from db.php
     if ($conn) {
         // Insert into xuser table
-        $stmt1 = $conn->prepare("INSERT INTO xuser (name, email, mobile, company_name, company_address) VALUES (?, ?, ?, ?, ?)");
-        if ($stmt1 === false) {
+        $stmt = $conn->prepare("INSERT INTO xuser (name, email, mobile, company_name, company_address) VALUES (?, ?, ?, ?, ?)");
+        if ($stmt === false) {
             throw new Exception("Prepare failed for xuser table: " . $conn->error);
-        }
-
-        // Insert into registrations table as well for compatibility
-        $stmt2 = $conn->prepare("INSERT INTO registrations (name, email, mobile, company_name, company_address) VALUES (?, ?, ?, ?, ?)");
-        if ($stmt2 === false) {
-            throw new Exception("Prepare failed for registrations table: " . $conn->error);
         }
 
         foreach ($registrations as $reg) {
             // Only insert if name and email are provided
             if (!empty($reg['name']) && !empty($reg['email'])) {
                 // Insert into xuser table
-                $stmt1->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
-                if ($stmt1->execute()) {
+                $stmt->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
+                if ($stmt->execute()) {
                     $successfulInserts++;
                 } else {
                     // Log execution error but continue with other registrations
-                    error_log("Execute failed for email " . $reg['email'] . " in xuser table: " . $stmt1->error);
-                }
-
-                // Insert into registrations table
-                $stmt2->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
-                if (!$stmt2->execute()) {
-                    // Log execution error but continue with other registrations
-                    error_log("Execute failed for email " . $reg['email'] . " in registrations table: " . $stmt2->error);
+                    error_log("Execute failed for email " . $reg['email'] . " in xuser table: " . $stmt->error);
                 }
             }
         }
-        $stmt1->close();
-        $stmt2->close();
+        $stmt->close();
     } else {
         throw new Exception("Database connection is not available.");
     }
