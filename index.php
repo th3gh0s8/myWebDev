@@ -2,7 +2,7 @@
 require_once 'db.php'; // Include the database connection
 
 // Initialize claimed count and progress
-$claimedCount = 0; // Will be updated from database
+$claimedCount = 80; // Default value as bait
 $progressPercentage = 0; // Will be calculated from actual data
 $totalSpots = 200;
 
@@ -12,7 +12,10 @@ if ($conn) {
         $result = $conn->query("SELECT COUNT(*) as count FROM xuser");
         if ($result) {
             $row = $result->fetch_assoc();
-            $claimedCount = $row['count'];
+            $registrationCount = $row['count'];
+            
+            // The "claimed" count starts at 80 (bait) and increases with each registration
+            $claimedCount = 80 + $registrationCount;
             
             // Calculate the progress percentage
             if ($totalSpots > 0) {
@@ -24,8 +27,8 @@ if ($conn) {
         // Log error, but don't block the page from rendering
         error_log("Error fetching registration count in index.php: " . $e->getMessage());
         // The page will render with default values
-        $claimedCount = 0;
-        $progressPercentage = 0;
+        $claimedCount = 80; // Default with bait
+        $progressPercentage = (80 / $totalSpots) * 100;
     }
 }
 
