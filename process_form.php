@@ -3,6 +3,7 @@
 
 // Include database connection
 require_once 'db.php';
+require_once 'send_email.php';
 
 // Prevent direct access
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -44,6 +45,7 @@ foreach ($registrations as $key => $reg) {
 
 // Insert registrations only into the xuser table
 $successfulInserts = 0;
+$duplicates = [];
 try {
     // The connection $conn is from db.php
     if ($conn) {
@@ -52,14 +54,30 @@ try {
         if ($stmt === false) {
             throw new Exception("Prepare failed for xuser table: " . $conn->error);
         }
-
         foreach ($registrations as $reg) {
             // Only insert if name and email are provided
             if (!empty($reg['name']) && !empty($reg['email'])) {
+                // Check if the email already exists
+                $checkStmt = $conn->prepare("SELECT id FROM xuser WHERE email = ? LIMIT 1");
+                $checkStmt->bind_param("s", $reg['email']);
+                $checkStmt->execute();
+                $result = $checkStmt->get_result();
+                
+                if ($result->num_rows > 0) {
+                    // Email already exists, add to duplicates array
+                    $duplicates[] = $reg['email'];
+                    error_log("Duplicate email attempted: " . $reg['email']);
+                    $checkStmt->close();
+                    continue; // Skip to the next registration
+                }
+                $checkStmt->close();
+                
                 // Insert into xuser table
                 $stmt->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
                 if ($stmt->execute()) {
                     $successfulInserts++;
+                    $emailSent = send_thank_you_email($reg['email'], $reg['name'], '11.11 Mega Sale', '100');
+                    error_log("Email sent status for {$reg['email']}: " . ($emailSent ? 'SUCCESS' : 'FAILED'));
                 } else {
                     // Log execution error but continue with other registrations
                     error_log("Execute failed for email " . $reg['email'] . " in xuser table: " . $stmt->error);
@@ -96,10 +114,25 @@ foreach ($registrations as $reg) {
                 <div class="card-body p-5">
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
                     <h1 class="display-4 fw-bold mt-3">Thank You, <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>!</h1>
-                    <?php if ($successfulInserts > 0): ?>
+                    <?php if ($successfulInserts > 0 && empty($duplicates)): ?>
                         <p class="lead my-4">Your registration for the 11.11 Mega Sale has been received. We will contact you shortly with more details.</p>
+                    <?php elseif ($successfulInserts > 0 && !empty($duplicates)): ?>
+                        <p class="lead my-4">Your registration for the 11.11 Mega Sale has been received. However, some email addresses were already registered.</p>
+                    <?php elseif ($successfulInserts == 0 && !empty($duplicates)): ?>
+                        <p class="lead my-4 text-warning">All provided email addresses were already registered. No new registrations were added.</p>
                     <?php else: ?>
                         <p class="lead my-4 text-warning">There was an issue with your registration. Please try again or contact support.</p>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($duplicates)): ?>
+                        <div class="alert alert-info mt-3">
+                            <p class="mb-1"><strong>Note:</strong> The following email addresses were already registered and were not processed again:</p>
+                            <ul class="mb-0">
+                                <?php foreach ($duplicates as $duplicate_email): ?>
+                                    <li><?php echo htmlspecialchars($duplicate_email, ENT_QUOTES, 'UTF-8'); ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                     <?php endif; ?>
                     <a href="index.php" class="btn btn-primary btn-lg">Back to Home</a>
                 </div>
