@@ -76,7 +76,30 @@ try {
                 $stmt->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
                 if ($stmt->execute()) {
                     $successfulInserts++;
-                    $emailSent = send_thank_you_email($reg['email'], $reg['name'], '11.11 Mega Sale', '100');
+                    $totalRegistrations = count($registrations);
+                    
+                    // Determine discount percentage based on total registrations
+                    $discount_percentage = 0;
+                    if ($totalRegistrations == 1) {
+                        $discount_percentage = 35;
+                    } elseif ($totalRegistrations == 2) {
+                        $discount_percentage = 40;
+                    } elseif ($totalRegistrations == 3) {
+                        $discount_percentage = 40;
+                    } elseif ($totalRegistrations == 4) {
+                        $discount_percentage = 50;
+                    } elseif ($totalRegistrations == 5) {
+                        $discount_percentage = 50;
+                    } else {
+                        $discount_percentage = 60; // 6 or more registrations
+                    }
+                    
+                    // Calculate discounted price (original price is 165,000)
+                    $original_price = 165000;
+                    $discounted_price = $original_price * (1 - $discount_percentage / 100);
+                    
+                    // Send email to each registration with the applicable discount
+                    $emailSent = send_thank_you_email($reg['email'], $reg['name'], 'XPOWER Software Suite', number_format($discounted_price, 0, '', ''), $totalRegistrations);
                     error_log("Email sent status for {$reg['email']}: " . ($emailSent ? 'SUCCESS' : 'FAILED'));
                 } else {
                     // Log execution error but continue with other registrations
