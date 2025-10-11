@@ -33,13 +33,13 @@ foreach ($registrations as $key => $reg) {
     // Check if required fields are present
     if (empty($reg['name']) || empty($reg['email'])) {
         http_response_code(400); // Bad Request
-        die("Name and email are required for registration " . ($key + 1));
+        die("Name and email are required for registration " . ($key + 1) . ". Please ensure all required fields are completed.");
     }
     
     // Validate email format
     if (!empty($reg['email']) && !filter_var($reg['email'], FILTER_VALIDATE_EMAIL)) {
         http_response_code(400); // Bad Request
-        die("Invalid email format for registration " . ($key + 1));
+        die("The email format is invalid for registration " . ($key + 1) . ". Please enter a valid email address.");
     }
 }
 
@@ -91,8 +91,8 @@ try {
 } catch (Exception $e) {
     error_log("Database error in process_form.php: " . $e->getMessage());
     http_response_code(500); // Internal Server Error
-    // Show a generic error to the user, details are logged
-    die("An error occurred while saving your data. Please try again later.");
+    // Show a professional error to the user, details are logged
+    die("We apologize, but an issue occurred while processing your registration. Our team has been notified and will address the matter promptly. Please try again later.");
 }
 
 // Use the first registration's name for the welcome message, fallback to 'Guest'
@@ -113,20 +113,21 @@ foreach ($registrations as $reg) {
             <div class="card shadow-lg">
                 <div class="card-body p-5">
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
-                    <h1 class="display-4 fw-bold mt-3">Thank You, <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>!</h1>
+                    <h1 class="display-4 fw-bold mt-3">Registration Confirmation</h1>
+                    <p class="lead mt-3">Dear <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>,</p>
                     <?php if ($successfulInserts > 0 && empty($duplicates)): ?>
-                        <p class="lead my-4">Your registration for the 11.11 Mega Sale has been received. We will contact you shortly with more details.</p>
+                        <p class="lead my-4">Thank you for registering for the 11.11 Mega Sale. Your registration has been successfully processed. We will contact you with additional information shortly.</p>
                     <?php elseif ($successfulInserts > 0 && !empty($duplicates)): ?>
-                        <p class="lead my-4">Your registration for the 11.11 Mega Sale has been received. However, some email addresses were already registered.</p>
+                        <p class="lead my-4">Thank you for registering for the 11.11 Mega Sale. Your new registration has been successfully processed. However, some of the email addresses you provided were already registered.</p>
                     <?php elseif ($successfulInserts == 0 && !empty($duplicates)): ?>
-                        <p class="lead my-4 text-warning">All provided email addresses were already registered. No new registrations were added.</p>
+                        <p class="lead my-4 text-warning">All provided email addresses are already registered for the 11.11 Mega Sale. No new registrations were added.</p>
                     <?php else: ?>
-                        <p class="lead my-4 text-warning">There was an issue with your registration. Please try again or contact support.</p>
+                        <p class="lead my-4 text-warning">An issue occurred while processing your registration. Please try again or contact our support team for assistance.</p>
                     <?php endif; ?>
                     
                     <?php if (!empty($duplicates)): ?>
                         <div class="alert alert-info mt-3">
-                            <p class="mb-1"><strong>Note:</strong> The following email addresses were already registered and were not processed again:</p>
+                            <p class="mb-1"><strong>Registration Details:</strong> The following email addresses were already registered and have been excluded from this submission:</p>
                             <ul class="mb-0">
                                 <?php foreach ($duplicates as $duplicate_email): ?>
                                     <li><?php echo htmlspecialchars($duplicate_email, ENT_QUOTES, 'UTF-8'); ?></li>
