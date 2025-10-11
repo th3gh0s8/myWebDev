@@ -62,8 +62,8 @@ include 'header.php';
                             <span class="original-price">was Rs 165,000</span>
                         </div>
                         <span class="badge bg-warning text-dark rounded-pill fs-5">35% OFF + More Discounts!</span>
-                        <div class="text-white mt-2">
-                            <small>*Base price. Add more registrations for bigger discounts!</small>
+                        <div class="mt-2">
+                            <span class="badge bg-info text-white rounded-pill">Add more for bigger discounts!</span>
                         </div>
                     </div>
                     <div class="card-body p-5">
@@ -94,7 +94,9 @@ include 'header.php';
                                 </div>
                                 <div class="mt-3">
                                     <div class="discount-tiers">
-                                        <small class="text-muted d-block mb-1">*Discounts increase with more registrations:</small>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-info text-white">More Registrations = Bigger Discounts!</span>
+                                        </div>
                                         <div class="d-flex flex-wrap justify-content-between">
                                             <span class="badge bg-success me-1 mb-1">1 → 35% OFF</span>
                                             <span class="badge bg-primary me-1 mb-1">2 → 40% OFF</span>
