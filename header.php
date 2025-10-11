@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/css/intlTelInput.min.css">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
             <!-- Left: Company Logo -->
             <a class="navbar-brand" href="#">

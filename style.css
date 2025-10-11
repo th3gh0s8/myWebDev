@@ -123,6 +123,13 @@ body {
     transition: background-color 0.3s ease-in-out;
 }
 
+/* Fixed navbar styling */
+.navbar.fixed-top {
+    z-index: 1000; /* Ensure navbar is above other elements */
+}
+
+
+
 .original-price {
     text-decoration: line-through;
     font-size: 1.2rem;
@@ -175,8 +182,11 @@ body {
     /* Softens the corners slightly */
 }
 
-.navbar-transparent {
-    background-color: transparent !important;
+/* Remove transparency from navbar */
+.navbar.bg-light {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Form Styling */
