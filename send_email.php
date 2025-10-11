@@ -13,7 +13,7 @@ function send_thank_you_email($to, $name, $product_name, $price) {
         error_log("Invalid email address provided: $to");
         return false;
     }
-    
+
     error_log("Attempting to send email to: $to, Name: $name");
 
     $mail = new PHPMailer(true);
@@ -25,8 +25,8 @@ function send_thank_you_email($to, $name, $product_name, $price) {
         $mail->Host       = 'smtp.gmail.com'; // Gmail SMTP server
         $mail->SMTPAuth   = true;
         error_log("SMTP auth enabled");
-        $mail->Username   = 'your-email@gmail.com'; // Your Gmail address
-        $mail->Password   = 'your-app-password'; // Your Gmail app password (use app password, not account password)
+        $mail->Username   = 'chamudithapasindu54@gmail.com'; // Your Gmail address
+        $mail->Password   = 'txik ulgz avos soao'; // Your Gmail app password (use app password, not account password)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
         $mail->SMTPOptions = array(
@@ -39,7 +39,7 @@ function send_thank_you_email($to, $name, $product_name, $price) {
         error_log("SMTP settings configured");
 
         //Recipients
-        $mail->setFrom('your-email@gmail.com', '11.11 Mega Sale'); // Has to be same as Username for Gmail
+        $mail->setFrom('chamudithapasindu54@gmail.com', '11.11 Mega Sale'); // Has to be same as Username for Gmail
         $mail->addAddress($to, $name);
         error_log("Recipients set");
 
