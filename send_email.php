@@ -19,27 +19,12 @@ function send_thank_you_email($to, $name, $product_name, $price) {
     $mail = new PHPMailer(true);
 
     try {
-        //Server settings
-        $mail->isSMTP(); // Enable SMTP
-        error_log("SMTP enabled");
-        $mail->Host       = 'smtp.gmail.com'; // Gmail SMTP server
-        $mail->SMTPAuth   = true;
-        error_log("SMTP auth enabled");
-        $mail->Username   = 'chamudithapasindu54@gmail.com'; // Your Gmail address
-        $mail->Password   = 'txik ulgz avos soao'; // Your Gmail app password (use app password, not account password)
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port       = 587;
-        $mail->SMTPOptions = array(
-            'ssl' => array(
-                'verify_peer' => false,
-                'verify_peer_name' => false,
-                'allow_self_signed' => true
-            )
-        );
-        error_log("SMTP settings configured");
-
+        //Server settings - Use PHP's mail() function instead of SMTP
+        $mail->isMail(); // Use PHP's mail() function
+        error_log("Using PHP mail() function");
+        
         //Recipients
-        $mail->setFrom('chamudithapasindu54@gmail.com', '11.11 Mega Sale'); // Has to be same as Username for Gmail
+        $mail->setFrom('noreply@yourdomain.com', '11.11 Mega Sale'); // Use your domain's default email
         $mail->addAddress($to, $name);
         error_log("Recipients set");
 
