@@ -3,6 +3,7 @@
 
 // Include database connection
 require_once 'db.php';
+require_once 'send_email.php';
 
 // Prevent direct access
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -60,6 +61,7 @@ try {
                 $stmt->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
                 if ($stmt->execute()) {
                     $successfulInserts++;
+                    send_thank_you_email($reg['email'], $reg['name'], '11.11 Mega Sale', '100');
                 } else {
                     // Log execution error but continue with other registrations
                     error_log("Execute failed for email " . $reg['email'] . " in xuser table: " . $stmt->error);
