@@ -58,10 +58,13 @@ include 'header.php';
                     <div class="price-banner text-center text-white">
                         <h4 class="offer-title mb-0">SPECIAL 11.11 OFFER</h4>
                         <div class="price-content my-2">
-                            <span class="final-price">Rs 132,000</span>
+                            <span class="final-price">Rs 107,250*</span>
                             <span class="original-price">was Rs 165,000</span>
                         </div>
-                        <span class="badge bg-warning text-dark rounded-pill">20% OFF</span>
+                        <span class="badge bg-warning text-dark rounded-pill fs-5">35% OFF + More Discounts!</span>
+                        <div class="text-white mt-2">
+                            <small>*Base price. Add more registrations for bigger discounts!</small>
+                        </div>
                     </div>
                     <div class="card-body p-5">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
@@ -72,22 +75,35 @@ include 'header.php';
                             <div id="registration-forms-container" class="accordion"></div>
 
                             <div class="d-grid my-3">
-                                <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More and Get More Discounts!</button>
+                                <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More for Bigger Discounts!</button>
                             </div>
 
                             <div id="total-summary" class="p-3 bg-light rounded">
                                 <div class="d-flex justify-content-between">
-                                    <span>Subtotal</span>
-                                    <span id="subtotal-display">Rs 132,000</span>
+                                    <span>Base Price (Rs 165,000 each)</span>
+                                    <span id="subtotal-display">Rs 165,000</span>
                                 </div>
                                 <div class="d-flex justify-content-between text-danger">
                                     <span>Discount</span>
-                                    <span id="discount-display">- Rs 0</span>
+                                    <span id="discount-display">- Rs 57,750</span>
                                 </div>
                                 <hr>
                                 <div class="d-flex justify-content-between h4 fw-bold">
                                     <span>Total</span>
-                                    <span id="total-price-display">Rs 132,000</span>
+                                    <span id="total-price-display">Rs 107,250</span>
+                                </div>
+                                <div class="mt-3">
+                                    <div class="discount-tiers">
+                                        <small class="text-muted d-block mb-1">*Discounts increase with more registrations:</small>
+                                        <div class="d-flex flex-wrap justify-content-between">
+                                            <span class="badge bg-success me-1 mb-1">1 → 35% OFF</span>
+                                            <span class="badge bg-primary me-1 mb-1">2 → 40% OFF</span>
+                                            <span class="badge bg-primary me-1 mb-1">3 → 40% OFF</span>
+                                            <span class="badge bg-warning text-dark me-1 mb-1">4 → 50% OFF</span>
+                                            <span class="badge bg-warning text-dark me-1 mb-1">5 → 50% OFF</span>
+                                            <span class="badge bg-danger me-1 mb-1">6+ → 60% OFF</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 

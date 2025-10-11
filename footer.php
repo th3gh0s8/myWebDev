@@ -51,12 +51,12 @@
             let phoneInstances = [];
 
             const getDiscountRate = (count) => {
-                if (count >= 6) return 0.15;
-                if (count === 5) return 0.125;
-                if (count === 4) return 0.10;
-                if (count === 3) return 0.075;
-                if (count === 2) return 0.05;
-                if (count === 1) return 0.20; // Apply 20% discount for single item
+                if (count >= 6) return 0.60; // 60% discount
+                if (count === 5) return 0.50; // 50% discount
+                if (count === 4) return 0.50; // 50% discount
+                if (count === 3) return 0.40; // 40% discount
+                if (count === 2) return 0.40; // 40% discount
+                if (count === 1) return 0.35; // 35% discount
                 return 0;
             };
 

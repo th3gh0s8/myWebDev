@@ -1,38 +1,38 @@
 <?php
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-require 'PHPMailer/src/Exception.php';
-require 'PHPMailer/src/PHPMailer.php';
-require 'PHPMailer/src/SMTP.php';
-
-function send_thank_you_email($to, $name, $product_name, $price) {
+function send_thank_you_email($to, $name, $product_name, $price, $registration_count = 1) {
     // Validate email address
     if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
         error_log("Invalid email address provided: $to");
         return false;
     }
     
-    error_log("Attempting to send email to: $to, Name: $name");
+    error_log("Attempting to send email to: $to, Name: $name, Registration Count: $registration_count");
 
-    $mail = new PHPMailer(true);
+    // Determine discount based on registration count
+    $discount_percentage = 0;
+    if ($registration_count == 1) {
+        $discount_percentage = 35;
+    } elseif ($registration_count == 2) {
+        $discount_percentage = 40;
+    } elseif ($registration_count == 3) {
+        $discount_percentage = 40;
+    } elseif ($registration_count == 4) {
+        $discount_percentage = 50;
+    } elseif ($registration_count == 5) {
+        $discount_percentage = 50;
+    } else {
+        $discount_percentage = 60; // 6 or more registrations
+    }
+    
+    // Calculate discounted price based on discount percentage
+    $original_price = 165000; // Original price in rupees
+    $discounted_price = $original_price * (1 - $discount_percentage / 100);
 
-    try {
-        //Server settings - Use PHP's mail() function instead of SMTP
-        $mail->isMail(); // Use PHP's mail() function
-        error_log("Using PHP mail() function");
-        
-        //Recipients
-        $mail->setFrom('noreply@yourdomain.com', '11.11 Mega Sale'); // Use your domain's default email
-        $mail->addAddress($to, $name);
-        error_log("Recipients set");
-
-        // Content
-        $mail->isHTML(true);
-        $mail->Subject = 'Thank You for Your Purchase! - XPOWER Software';
-        
-        $htmlTemplate = '<!DOCTYPE html>
+    // Prepare the email content
+    $subject = 'Thank You for Your Purchase! - XPOWER Software';
+    
+    // HTML email content
+    $htmlContent = '<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -139,18 +139,19 @@ function send_thank_you_email($to, $name, $product_name, $price) {
       <h1>Thank You for Your Purchase!</h1>
     </div>
     <div class="content">
-      <h2>Hi {{customer_name}},</h2>
+      <h2>Hi '.$name.',</h2>
       <p>We\'re excited to let you know that your order for <strong>XPOWER</strong> has been successfully completed!</p>
 
       <div class="price-box">
-        <p class="original-price">Original Price: Rs 165,000</p>
-        <p class="discounted-price">Discounted Price: Rs 132,000</p>
-        <span class="discount-badge">20% OFF</span>
+        <p class="original-price">Original Price: Rs '.$original_price.'</p>
+        <p class="discounted-price">Discounted Price: Rs '.number_format($discounted_price).'</p>
+        <span class="discount-badge">'.$discount_percentage.'% OFF</span>
       </div>
 
       <div class="offer">
         <p><strong>Product:</strong> XPOWER Software Suite</p>
-        <p><strong>Offer:</strong> 11.11 Mega Offer 🎉</p>
+        <p><strong>Offer:</strong> 11.11 Mega Sale 🎉</p>
+        <p><strong>Discount Applied:</strong> Based on your total of '.$registration_count.' registration(s)</p>
         <p><strong>Company:</strong> Powersoft Pvt Ltd</p>
       </div>
 
@@ -169,26 +170,18 @@ function send_thank_you_email($to, $name, $product_name, $price) {
   </div>
 </body>
 </html>';
-        
-        // Replace placeholders with actual values
-        $htmlContent = str_replace(
-            ['{{customer_name}}', '{{product_name}}', '{{price}}'],
-            [$name, $product_name, $price],
-            $htmlTemplate
-        );
-        
-        $mail->Body = $htmlContent;
-        
-        // Create plain text version for email clients that don't support HTML
-        $mail->AltBody = "Thank You for Your Purchase! - XPOWER Software
+
+    // Plain text version
+    $textContent = "Thank You for Your Purchase! - XPOWER Software
 Hi $name,
 
 We're excited to let you know that your order for XPOWER has been successfully completed!
 
 Product: XPOWER Software Suite
-Original Price: Rs 165,000
-Discounted Price: Rs 132,000 (20% OFF)
-Offer: 11.11 Mega Offer 🎉
+Original Price: Rs ".$original_price."
+Discounted Price: Rs ".number_format($discounted_price)." (".$discount_percentage."% OFF)
+Discount Applied: Based on your total of ".$registration_count." registration(s)
+Offer: 11.11 Mega Sale 🎉
 Company: Powersoft Pvt Ltd
 
 Your purchase details have been sent to your registered email. You can now enjoy the full power of XPOWER — a reliable, efficient, and high-performance solution by Powersoft Pvt Ltd.
@@ -202,12 +195,20 @@ Thank you for choosing Powersoft Pvt Ltd. We're thrilled to have you on board!
 Powersoft Pvt Ltd | powersoftt.com
 © 2025 Powersoft Pvt Ltd. All rights reserved.";
 
-        error_log("Attempting to send email...");
-        $mail->send();
+    // Set up headers for HTML email
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= 'From: noreply@go2webadmin.com' . "\r\n";
+    
+    error_log("Attempting to send email using PHP mail() function...");
+    
+    // Try to send the email using PHP's built-in mail() function
+    $result = mail($to, $subject, $htmlContent, $headers);
+    
+    if ($result) {
         error_log("Email sent successfully to: $to");
         return true;
-    } catch (Exception $e) {
-        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}");
+    } else {
         error_log("Email sending failed for: $to, Name: $name");
         return false;
     }
