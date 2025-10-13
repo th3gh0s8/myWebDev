@@ -353,9 +353,12 @@ body {
     }
     
     .remove-form-btn {
-        padding: 0.5rem 0.8rem;
-        font-size: 0.9rem;
+        padding: 0.6rem 0.9rem;
+        font-size: 1rem;
         margin-bottom: 0.75rem;
+        align-self: flex-end; /* Align to the right side of the accordion */
+        min-height: 44px; /* Minimum touch target size for mobile */
+        min-width: 80px; /* Ensure adequate width for mobile */
     }
     
     #total-summary {
