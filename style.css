@@ -291,6 +291,7 @@ body {
     align-self: flex-start; /* Important for sticky to work in a flex container */
 }
 
+/* Mobile-specific styles for improved user experience */
 @media (max-width: 767.98px) {
     .countdown-container {
         flex-wrap: wrap;
@@ -304,5 +305,69 @@ body {
 
     .hero-sticky-content {
         position: static; /* Disable sticky on mobile */
+    }
+    
+    /* Mobile improvements for registration form */
+    #promo-form .card {
+        margin: 0.5rem;
+    }
+    
+    #promo-form .card-body {
+        padding: 1.25rem;
+    }
+    
+    #promo-form .form-label {
+        font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+    }
+    
+    #promo-form .form-control {
+        padding: 0.6rem 0.8rem;
+        font-size: 1rem;
+        height: auto;
+    }
+    
+    .accordion-button {
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .accordion-body {
+        padding: 1.25rem 1rem;
+    }
+    
+    .remove-form-btn {
+        padding: 0.4rem 0.7rem;
+        font-size: 0.85rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    #total-summary {
+        padding: 1.25rem;
+        margin: 1.25rem 0.5rem;
+    }
+    
+    #add-form-btn {
+        margin: 1.25rem 0.5rem;
+        padding: 0.75rem 1rem;
+        font-size: 1rem;
+    }
+    
+    .btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.95rem;
+    }
+    
+    .price-banner {
+        padding: 1.25rem 0.75rem;
+    }
+    
+    .price-banner .final-price {
+        font-size: 1.8rem;
+    }
+    
+    .discount-tiers .tier-card {
+        margin: 0.75rem 0.25rem;
+        padding: 0.75rem 0.5rem;
     }
 }
