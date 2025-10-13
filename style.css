@@ -8,14 +8,13 @@ body {
 
 .hero {
     background-color: #f8f9fa;
-    padding: 2rem 0;
+    padding: 6rem 0;
     text-align: center;
 }
 
 .hero h1 {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 700;
-    margin-bottom: 1rem;
 }
 
 .hero .lead {
@@ -24,7 +23,7 @@ body {
 }
 
 .section-padding {
-    padding: 2rem 0;
+    padding: 4rem 0;
 }
 
 .section-title {
@@ -77,7 +76,7 @@ body {
 /* Promotion Hero Section */
 .hero-promotion {
     background: linear-gradient(45deg, #0d6efd, #6f42c1);
-    padding: 2rem 0;
+    padding: 6rem 0;
 }
 
 .text-white-75 {
@@ -122,15 +121,7 @@ body {
 .navbar {
     /* position: relative; is removed to avoid conflict with fixed-top */
     transition: background-color 0.3s ease-in-out;
-    padding: 0.5rem 0;
 }
-
-/* Fixed navbar styling */
-.navbar.fixed-top {
-    z-index: 1000; /* Ensure navbar is above other elements */
-}
-
-
 
 .original-price {
     text-decoration: line-through;
@@ -175,54 +166,17 @@ body {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    height: 50px;
+    height: 60px;
 }
 
 .navbar-logo {
-    height: 40px;
+    height: 50px;
     border-radius: 3px;
     /* Softens the corners slightly */
 }
 
-/* Make navbar transparent */
-.navbar {
-    background: transparent !important;
+.navbar-transparent {
     background-color: transparent !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-    transition: background-color 0.3s ease-in-out;
-}
-
-
-
-.navbar.navbar-dark {
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-.navbar.navbar-light {
-    background: transparent !important;
-    background-color: transparent !important;
-}
-
-.navbar.bg-light {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
-}
-
-.navbar.navbar-transparent {
-    background: transparent !important;
-    background-color: transparent !important;
-    background-image: none !important;
-    border: none !important;
-    box-shadow: none !important;
-    backdrop-filter: none !important;
 }
 
 /* Form Styling */
