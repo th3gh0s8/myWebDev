@@ -13,10 +13,10 @@ if ($conn) {
         if ($result) {
             $row = $result->fetch_assoc();
             $registrationCount = $row['count'];
-            
+
             // The "claimed" count starts at 80 (bait) and increases with each registration
             $claimedCount = 80 + $registrationCount;
-            
+
             // Calculate the progress percentage
             if ($totalSpots > 0) {
                 $progressPercentage = min(($claimedCount / $totalSpots) * 100, 100); // Cap at 100%
@@ -81,7 +81,7 @@ include 'header.php';
                                                                                 </div>
                                                                             </div>
                                                                             <div class="col text-center">
-                                                                                <div class="tier-card tier-3 p-3 rounded">                                            <p class="fw-bold mb-1">6+ Registrations</p>
+                                                                                <div class="tier-card tier-3 p-3 rounded">                                            <p class="fw-bold mb-1">6 Registrations</p>
                                             <p class="display-6 fw-bold">60%</p>
                                             <p class="small mb-0">OFF</p>
                                         </div>
