@@ -179,6 +179,52 @@ body {
     background-color: transparent !important;
 }
 
+.navbar-hidden {
+    transform: translateY(-100%);
+}
+
+.discount-tiers .tier-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.discount-tiers .tier-card::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.2), transparent);
+    transform: rotate(45deg);
+    transition: all 0.5s ease;
+}
+
+.discount-tiers .tier-card:hover::before {
+    top: 50%;
+    left: 50%;
+}
+
+.discount-tiers .tier-1 {
+    background: linear-gradient(45deg, #b87333, #8b4513, #b87333);
+    color: #fff;
+}
+
+.discount-tiers .tier-2 {
+    background: linear-gradient(45deg, #d3d3d3, #a9a9a9, #d3d3d3);
+    color: #000;
+}
+
+.discount-tiers .tier-3 {
+    background: linear-gradient(45deg, #f1e78b, #ffd700, #f1e78b);
+    color: #000;
+}
+
+.discount-tiers .tier-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
 /* Form Styling */
 #promo-form .form-label {
     font-weight: 500;

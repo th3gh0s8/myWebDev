@@ -64,6 +64,30 @@ include 'header.php';
                         <span class="badge bg-warning text-dark rounded-pill fs-5">35% OFF + More Discounts!</span>
                         <div class="mt-2">
                             <span class="badge bg-info text-white rounded-pill">Add more for bigger discounts!</span>
+                            <div class="discount-tiers mt-4">
+                                <div class="row">
+                                                                            <div class="col text-center">
+                                                                                <div class="tier-card tier-1 p-3 rounded">
+                                                                                    <p class="fw-bold mb-1">2-3 Registrations</p>
+                                                                                    <p class="display-6 fw-bold">40%</p>
+                                                                                    <p class="small mb-0">OFF</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col text-center">
+                                                                                <div class="tier-card tier-2 p-3 rounded">
+                                                                                    <p class="fw-bold mb-1">4-5 Registrations</p>
+                                                                                    <p class="display-6 fw-bold">50%</p>
+                                                                                    <p class="small mb-0">OFF</p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="col text-center">
+                                                                                <div class="tier-card tier-3 p-3 rounded">                                            <p class="fw-bold mb-1">6+ Registrations</p>
+                                            <p class="display-6 fw-bold">60%</p>
+                                            <p class="small mb-0">OFF</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body p-5">
@@ -78,6 +102,8 @@ include 'header.php';
                                 <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More for Bigger Discounts!</button>
                             </div>
 
+
+
                             <div id="total-summary" class="p-3 bg-light rounded">
                                 <div class="d-flex justify-content-between">
                                     <span>Base Price (Rs 165,000 each)</span>
@@ -91,21 +117,6 @@ include 'header.php';
                                 <div class="d-flex justify-content-between h4 fw-bold">
                                     <span>Total</span>
                                     <span id="total-price-display">Rs 107,250</span>
-                                </div>
-                                <div class="mt-3">
-                                    <div class="discount-tiers">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-info text-white">More Registrations = Bigger Discounts!</span>
-                                        </div>
-                                        <div class="d-flex flex-wrap justify-content-between">
-                                            <span class="badge bg-success me-1 mb-1">1 → 35% OFF</span>
-                                            <span class="badge bg-primary me-1 mb-1">2 → 40% OFF</span>
-                                            <span class="badge bg-primary me-1 mb-1">3 → 40% OFF</span>
-                                            <span class="badge bg-warning text-dark me-1 mb-1">4 → 50% OFF</span>
-                                            <span class="badge bg-warning text-dark me-1 mb-1">5 → 50% OFF</span>
-                                            <span class="badge bg-danger me-1 mb-1">6+ → 60% OFF</span>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
