@@ -131,36 +131,25 @@ include 'header.php';
     </div>
 </header>
 
-<!-- Features Section -->
-<section id="features" class="section-padding">
+<!-- 365 Days Customer Care Section -->
+<section id="customer-care" class="section-padding">
     <div class="container">
-        <h2 class="section-title">Key Features</h2>
-        <div class="row g-4">
-            <div class="col-md-4">
-                <div class="card feature-card text-center p-4">
-                    <div class="feature-icon mb-3 mx-auto">
-                        <i class="bi bi-speedometer2"></i>
+        <h2 class="section-title">365 Days Customer Care</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card feature-card text-center p-5">
+                    <div class="feature-icon mb-4 mx-auto">
+                        <i class="bi bi-headset" style="font-size: 3rem;"></i>
                     </div>
-                    <h3 class="h5">Fast & Efficient</h3>
-                    <p class="card-text">Our software is optimized for speed, ensuring a smooth and responsive user experience across all devices.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card feature-card text-center p-4">
-                    <div class="feature-icon mb-3 mx-auto">
-                        <i class="bi bi-shield-lock"></i>
+                    <h3 class="h4">Dedicated Support, Every Day of the Year</h3>
+                    <p class="card-text lead">Our commitment to you extends all 365 days of the year. No matter when you need assistance, our customer care team is here to support you with any questions, concerns, or technical issues you may encounter.</p>
+                    <div class="mt-4">
+                        <div class="d-flex justify-content-center gap-4">
+                            <p class="mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> 24/7 Availability</p>
+                            <p class="mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> Expert Technical Support</p>
+                            <p class="mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> Year-Round Service</p>
+                        </div>
                     </div>
-                    <h3 class="h5">Secure by Design</h3>
-                    <p class="card-text">With industry-leading security protocols, your data is always safe and protected from unauthorized access.</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card feature-card text-center p-4">
-                    <div class="feature-icon mb-3 mx-auto">
-                        <i class="bi bi-headset"></i>
-                    </div>
-                    <h3 class="h5">24/7 Support</h3>
-                    <p class="card-text">Our dedicated support team is available around the clock to assist you with any questions or issues.</p>
                 </div>
             </div>
         </div>
