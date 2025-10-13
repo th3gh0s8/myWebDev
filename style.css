@@ -309,65 +309,150 @@ body {
     
     /* Mobile improvements for registration form */
     #promo-form .card {
-        margin: 0.5rem;
+        margin: 0.5rem 0; /* Reduce side margins to allow more width */
+        border-radius: 0.5rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     #promo-form .card-body {
-        padding: 1.25rem;
+        padding: 1.5rem;
+        width: 100%;
     }
     
     #promo-form .form-label {
-        font-size: 0.95rem;
-        margin-bottom: 0.3rem;
+        font-size: 1.1rem;
+        margin-bottom: 0.4rem;
+        font-weight: 600;
+        width: 100%;
+        display: block;
     }
     
     #promo-form .form-control {
-        padding: 0.6rem 0.8rem;
-        font-size: 1rem;
+        padding: 0.8rem 1rem;
+        font-size: 1.1rem;
         height: auto;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
+        margin-bottom: 0.75rem;
     }
     
     .accordion-button {
-        padding: 0.8rem 1rem;
-        font-size: 1rem;
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .accordion-body {
-        padding: 1.25rem 1rem;
+        padding: 1.5rem 1.25rem;
+        width: 100%;
     }
     
     .remove-form-btn {
-        padding: 0.4rem 0.7rem;
-        font-size: 0.85rem;
-        margin-bottom: 0.5rem;
+        padding: 0.6rem 0.9rem;
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+        align-self: flex-end; /* Align to the right side of the accordion */
+        min-height: 44px; /* Minimum touch target size for mobile */
+        min-width: 80px; /* Ensure adequate width for mobile */
     }
     
     #total-summary {
-        padding: 1.25rem;
-        margin: 1.25rem 0.5rem;
+        padding: 1.5rem;
+        margin: 1.5rem 0; /* Reduce side margins */
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     #add-form-btn {
-        margin: 1.25rem 0.5rem;
-        padding: 0.75rem 1rem;
-        font-size: 1rem;
+        margin: 1.5rem 0; /* Reduce side margins */
+        padding: 1rem 1.25rem;
+        font-size: 1.1rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .btn {
-        padding: 0.6rem 1rem;
-        font-size: 0.95rem;
+        padding: 0.8rem 1.1rem;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
     
     .price-banner {
-        padding: 1.25rem 0.75rem;
+        padding: 1.5rem 1rem;
+        width: 100%;
     }
     
     .price-banner .final-price {
-        font-size: 1.8rem;
+        font-size: 2rem;
     }
     
     .discount-tiers .tier-card {
         margin: 0.75rem 0.25rem;
         padding: 0.75rem 0.5rem;
+    }
+    
+    /* Ensure form elements take full width on mobile */
+    #promo-form .mb-3 {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 1.25rem;
+        box-sizing: border-box;
+    }
+    
+    .accordion-item {
+        width: 100%;
+        max-width: 100%;
+        margin: 0.75rem 0;
+        box-sizing: border-box;
+    }
+    
+    /* Ensure the entire form area uses maximum width */
+    #registration-forms-container {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* Align form fields properly */
+#promo-form .mb-3 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align to the left */
+}
+
+#promo-form .form-label {
+    margin-bottom: 0.5rem;
+    align-self: stretch;
+}
+
+#promo-form .form-control {
+    max-width: 350px; /* Limit the width of all form inputs */
+    align-self: stretch; /* Align input to the full width of container */
+}
+
+/* Keep textarea at appropriate width */
+#promo-form textarea.form-control {
+    width: 100%;
+    max-width: 500px;
+    resize: vertical; /* Only allow vertical resizing */
+}
+
+@media (max-width: 767.98px) {
+    #promo-form .form-control {
+        max-width: 100%; /* Full width on mobile */
+        width: 100%;
+    }
+    
+    #promo-form textarea.form-control {
+        max-width: 100%;
     }
 }
