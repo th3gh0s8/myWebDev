@@ -90,15 +90,15 @@ include 'header.php';
                             </div>
                         </div>
                     </div>
-                    <div class="card-body p-5">
+                    <div class="card-body py-5 px-3">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
                         <form action="process_form.php" method="POST" id="promo-form">
 
-                            <hr class="my-4">
+                            <hr class="my-2">
 
                             <div id="registration-forms-container" class="accordion"></div>
 
-                            <div class="d-grid my-3">
+                            <div class="d-grid my-2">
                                 <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More for Bigger Discounts!</button>
                             </div>
 
@@ -120,7 +120,7 @@ include 'header.php';
                                 </div>
                             </div>
 
-                            <div class="d-grid mt-4">
+                            <div class="d-grid mt-2">
                                 <button type="submit" class="btn btn-primary btn-lg">Claim Offer</button>
                             </div>
                         </form>
@@ -143,13 +143,7 @@ include 'header.php';
                     </div>
                     <h3 class="h4">Dedicated Support, Every Day of the Year</h3>
                     <p class="card-text lead">Our commitment to you extends all 365 days of the year. No matter when you need assistance, our customer care team is here to support you with any questions, concerns, or technical issues you may encounter.</p>
-                    <div class="mt-4">
-                        <div class="d-flex justify-content-center gap-4">
-                            <p class="mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> 24/7 Availability</p>
-                            <p class="mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> Expert Technical Support</p>
-                            <p class="mb-0 d-flex align-items-center"><i class="bi bi-check-circle-fill text-success me-2"></i> Year-Round Service</p>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
