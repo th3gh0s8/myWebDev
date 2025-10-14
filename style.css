@@ -262,7 +262,7 @@ body {
 }
 
 .accordion-body {
-    padding: 1.5rem;
+    padding: 1rem; /* Reduced from 1.5rem */
 }
 
 /* Total Summary Section */
@@ -317,7 +317,7 @@ body {
     }
     
     #promo-form .card-body {
-        padding: 1.5rem;
+        padding: 1.5rem 1rem; /* 1.5rem top/bottom, 1rem left/right to match desktop px-3 */
         width: 100%;
     }
     
@@ -330,57 +330,57 @@ body {
     }
     
     #promo-form .form-control {
-        padding: 0.8rem 1rem;
-        font-size: 1.1rem;
+        padding: 0.6rem 0.75rem; /* Reduced from 0.8rem 1rem */
+        font-size: 1rem; /* Reduced from 1.1rem */
         height: auto;
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.5rem; /* Reduced from 0.75rem */
     }
     
     .accordion-button {
-        padding: 1rem 1.25rem;
-        font-size: 1.1rem;
+        padding: 0.75rem 1rem; /* Reduced from 1rem 1.25rem */
+        font-size: 1rem; /* Reduced from 1.1rem */
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
     }
     
     .accordion-body {
-        padding: 1.5rem 1.25rem;
+        padding: 0.75rem 1rem; /* Reduced from 1.5rem 1.25rem */
         width: 100%;
     }
     
     .remove-form-btn {
-        padding: 0.6rem 0.9rem;
-        font-size: 1rem;
-        margin-bottom: 0.75rem;
+        padding: 0.4rem 0.6rem; /* Reduced from 0.6rem 0.9rem */
+        font-size: 0.9rem; /* Reduced from 1rem */
+        margin-bottom: 0.5rem; /* Reduced from 0.75rem */
         align-self: flex-end; /* Align to the right side of the accordion */
-        min-height: 44px; /* Minimum touch target size for mobile */
-        min-width: 80px; /* Ensure adequate width for mobile */
+        min-height: 40px; /* Reduced from 44px but still adequate for touch */
+        min-width: 70px; /* Reduced from 80px but still adequate for mobile */
     }
     
     #total-summary {
-        padding: 1.5rem;
-        margin: 1.5rem 0; /* Reduce side margins */
+        padding: 1rem; /* Reduced from 1.5rem */
+        margin: 1rem 0; /* Reduced from 1.5rem 0 */
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
     }
     
     #add-form-btn {
-        margin: 1.5rem 0; /* Reduce side margins */
-        padding: 1rem 1.25rem;
-        font-size: 1.1rem;
+        margin: 0.75rem 0; /* Reduced from 1.5rem 0 */
+        padding: 0.75rem 1rem; /* Reduced from 1rem 1.25rem */
+        font-size: 1rem; /* Reduced from 1.1rem */
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
     }
     
     .btn {
-        padding: 0.8rem 1.1rem;
-        font-size: 1rem;
+        padding: 0.6rem 0.9rem; /* Reduced from 0.8rem 1.1rem */
+        font-size: 0.9rem; /* Reduced from 1rem */
         width: 100%;
         max-width: 100%;
         box-sizing: border-box;
@@ -404,14 +404,14 @@ body {
     #promo-form .mb-3 {
         width: 100%;
         max-width: 100%;
-        margin-bottom: 1.25rem;
+        margin-bottom: 0.75rem; /* Reduced from 1.25rem */
         box-sizing: border-box;
     }
     
     .accordion-item {
         width: 100%;
         max-width: 100%;
-        margin: 0.75rem 0;
+        margin: 0.5rem 0; /* Reduced from 0.75rem 0 */
         box-sizing: border-box;
     }
     
@@ -420,6 +420,19 @@ body {
         width: 100%;
         max-width: 100%;
     }
+    
+    /* Reduce spacing around form elements in mobile */
+    #promo-form hr {
+        margin: 0.5rem 0; /* Reduced spacing around horizontal rule */
+    }
+    
+    #promo-form .d-grid.mt-2 {
+        margin-top: 0.5rem; /* Reduced from mt-2 */
+    }
+    
+    #promo-form .d-grid.my-2 {
+        margin: 0.5rem 0; /* Reduced from my-2 */
+    }
 }
 
 /* Align form fields properly */
@@ -427,10 +440,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start; /* Align to the left */
+    margin-bottom: 0.75rem; /* Reduced from default mb-3 (which is 1rem) */
 }
 
 #promo-form .form-label {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem; /* Reduced from 0.5rem */
     align-self: stretch;
 }
 
