@@ -568,6 +568,9 @@ Powersoft Pvt Ltd | powersoftt.com
                     </div>
                     <div class="card-body py-5 px-3">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
+                        <div class="text-center mb-3">
+                            <span class="badge bg-success fs-5">Current Discount: <span id="current-discount">35%</span> OFF</span>
+                        </div>
                         <form action="index.php" method="POST" id="promo-form">
 
                             <hr class="my-2">
@@ -708,33 +711,32 @@ Powersoft Pvt Ltd | powersoftt.com
         </div>
     </footer>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/js/intlTelInput.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const navbar = document.querySelector('.navbar');
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 50) {
-                    navbar.classList.add('bg-light', 'shadow-sm');
-                    navbar.classList.remove('navbar-transparent');
+        $(document).ready(function() {
+            const navbar = $('.navbar');
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() > 50) {
+                    navbar.addClass('bg-light shadow-sm').removeClass('navbar-transparent');
                 } else {
-                    navbar.classList.remove('bg-light', 'shadow-sm');
-                    navbar.classList.add('navbar-transparent');
+                    navbar.removeClass('bg-light shadow-sm').addClass('navbar-transparent');
                 }
             });
             
             // Navbar hiding functionality from main.js
-            window.addEventListener('scroll', function() {
-                if (window.scrollY > 100) {
-                    navbar.classList.add('navbar-hidden');
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() > 100) {
+                    navbar.addClass('navbar-hidden');
                 } else {
-                    navbar.classList.remove('navbar-hidden');
+                    navbar.removeClass('navbar-hidden');
                 }
             });
 
             // Countdown Timer
-            const countdownElement = document.getElementById('countdown');
-            if (countdownElement) {
+            const countdownElement = $('#countdown');
+            if (countdownElement.length) {
                 const targetDate = new Date('2025-11-11T00:00:00').getTime();
                 const interval = setInterval(() => {
                     const now = new Date().getTime();
@@ -743,21 +745,21 @@ Powersoft Pvt Ltd | powersoftt.com
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    countdownElement.innerHTML = `<div class=\"countdown-item\"><span>${days}</span> Days</div><div class=\"countdown-item\"><span>${hours}</span> Hours</div><div class=\"countdown-item\"><span>${minutes}</span> Minutes</div><div class=\"countdown-item\"><span>${seconds}</span> Seconds</div>`;
+                    countdownElement.html(`<div class=\"countdown-item\"><span>${days}</span> Days</div><div class=\"countdown-item\"><span>${hours}</span> Hours</div><div class=\"countdown-item\"><span>${minutes}</span> Minutes</div><div class=\"countdown-item\"><span>${seconds}</span> Seconds</div>`);
                     if (distance < 0) {
                         clearInterval(interval);
-                        countdownElement.innerHTML = '<div class=\"countdown-item\"><span>EXPIRED</span></div>';
+                        countdownElement.html('<div class=\"countdown-item\"><span>EXPIRED</span></div>');
                     }
                 }, 1000);
             }
 
             // Multi-form Registration Logic
-            const form = document.getElementById('promo-form');
-            const container = document.getElementById('registration-forms-container');
-            const addBtn = document.getElementById('add-form-btn');
-            const subtotalDisplay = document.getElementById('subtotal-display');
-            const discountDisplay = document.getElementById('discount-display');
-            const totalDisplay = document.getElementById('total-price-display');
+            const form = $('#promo-form');
+            const container = $('#registration-forms-container');
+            const addBtn = $('#add-form-btn');
+            const subtotalDisplay = $('#subtotal-display');
+            const discountDisplay = $('#discount-display');
+            const totalDisplay = $('#total-price-display');
 
             const basePrice = 165000;
             let formCount = 0;
@@ -774,15 +776,22 @@ Powersoft Pvt Ltd | powersoftt.com
             };
 
             const updateTotal = () => {
-                const count = container.children.length;
+                const count = container.children().length;
                 const discountRate = getDiscountRate(count);
+                const discountPercentage = Math.round(discountRate * 100); // Convert to percentage
                 const subtotal = count * basePrice;
                 const discountAmount = subtotal * discountRate;
                 const finalTotal = subtotal - discountAmount;
 
-                subtotalDisplay.textContent = `Rs ${subtotal.toLocaleString('en-US')}`;
-                discountDisplay.textContent = `- Rs ${discountAmount.toLocaleString('en-US')}`;
-                totalDisplay.textContent = `Rs ${finalTotal.toLocaleString('en-US')}`;
+                subtotalDisplay.text(`Rs ${subtotal.toLocaleString('en-US')}`);
+                discountDisplay.text(`- Rs ${discountAmount.toLocaleString('en-US')}`);
+                totalDisplay.text(`Rs ${finalTotal.toLocaleString('en-US')}`);
+                
+                // Update discount percentage display
+                $('#discount-percentage').text(`${discountPercentage}% OFF`);
+                
+                // Also update the current discount badge
+                $('#current-discount').text(`${discountPercentage}%`);
             };
 
             const addRegistrationForm = () => {
@@ -792,43 +801,41 @@ Powersoft Pvt Ltd | powersoftt.com
                 const formId = `reg-form-${formCount}`;
                 const isFirst = formCount === 1;
 
-                const template = document.createElement('div');
-                template.className = 'accordion-item';
-                template.innerHTML = `
-                    <h2 class=\"accordion-header\" id=\"heading-${formId}\">
-                        <button class=\"accordion-button ${isFirst ? '' : 'collapsed'}\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-${formId}\" aria-expanded=\"${isFirst}\" aria-controls=\"collapse-${formId}\">
+                const template = $(`<div class="accordion-item">
+                    <h2 class="accordion-header" id="heading-${formId}">
+                        <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${formId}" aria-expanded="${isFirst}" aria-controls="collapse-${formId}">
                             Registration #${formCount}
                         </button>
                     </h2>
-                    <div id=\"collapse-${formId}\" class=\"accordion-collapse collapse ${isFirst ? 'show' : ''}\" aria-labelledby=\"heading-${formId}\">
-                        <div class=\"accordion-body\">
-                            ${!isFirst ? '<button type=\"button\" class=\"btn btn-sm btn-danger float-end remove-form-btn\">Remove</button>' : ''}
-                            <div class=\"mb-3\">
-                                <label class=\"form-label\">Full Name</label>
-                                <input type=\"text\" class=\"form-control\" name=\"registrations[${formCount}][name]\" required maxlength=\"100\">
+                    <div id="collapse-${formId}" class="accordion-collapse collapse ${isFirst ? 'show' : ''}" aria-labelledby="heading-${formId}">
+                        <div class="accordion-body">
+                            ${!isFirst ? '<button type="button" class="btn btn-sm btn-danger float-end remove-form-btn">Remove</button>' : ''}
+                            <div class="mb-3">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" name="registrations[${formCount}][name]" required maxlength="100">
                             </div>
-                            <div class=\"mb-3\">
-                                <label class=\"form-label\">Email Address</label>
-                                <input type=\"email\" class=\"form-control\" name=\"registrations[${formCount}][email]\" required maxlength=\"100\">
+                            <div class="mb-3">
+                                <label class="form-label">Email Address</label>
+                                <input type="email" class="form-control" name="registrations[${formCount}][email]" required maxlength="100">
                             </div>
-                            <div class=\"mb-3\">
-                                <label class=\"form-label\">Mobile Number</label>
-                                <input type=\"tel\" class=\"form-control phone-input\" name=\"registrations[${formCount}][mobile]\" required oninput=\"this.value = this.value.replace(/[^0-9]/g, '')\">
+                            <div class="mb-3">
+                                <label class="form-label">Mobile Number</label>
+                                <input type="tel" class="form-control phone-input" name="registrations[${formCount}][mobile]" required oninput="this.value = this.value.replace(/[^0-9]/g, '')">
                             </div>
-                            <div class=\"mb-3\">
-                                <label class=\"form-label\">Company Name</label>
-                                <input type=\"text\" class=\"form-control\" name=\"registrations[${formCount}][company_name]\" maxlength=\"100\">
+                            <div class="mb-3">
+                                <label class="form-label">Company Name</label>
+                                <input type="text" class="form-control" name="registrations[${formCount}][company_name]" maxlength="100">
                             </div>
-                            <div class=\"mb-3\">
-                                <label class=\"form-label\">Company Address</label>
-                                <textarea class=\"form-control\" name=\"registrations[${formCount}][company_address]\" rows=\"3\" maxlength=\"255\"></textarea>
+                            <div class="mb-3">
+                                <label class="form-label">Company Address</label>
+                                <textarea class="form-control" name="registrations[${formCount}][company_address]" rows="3" maxlength="255"></textarea>
                             </div>
                         </div>
                     </div>
-                `;
-                container.appendChild(template);
+                </div>`);
+                container.append(template);
 
-                const phoneInputEl = template.querySelector('.phone-input');
+                const phoneInputEl = template.find('.phone-input')[0];
                 const phoneInput = window.intlTelInput(phoneInputEl, {
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/js/utils.js",
                     nationalMode: true, initialCountry: "auto",
@@ -841,31 +848,31 @@ Powersoft Pvt Ltd | powersoftt.com
                     phoneInputEl.maxLength = (countryData.iso2 === 'lk') ? 10 : phoneInput.getNumberPlaceholder().replace(/\D/g, '').length;
                 };
                 phoneInput.promise.then(updateMaxLength);
-                phoneInputEl.addEventListener('countrychange', updateMaxLength);
+                $(phoneInputEl).on('countrychange', updateMaxLength);
 
                 if (!isFirst) {
-                    template.querySelector('.remove-form-btn').addEventListener('click', () => {
+                    template.find('.remove-form-btn').on('click', () => {
                         phoneInstances = phoneInstances.filter(p => p.id !== formId);
                         template.remove();
                         formCount--;
-                        addBtn.disabled = false;
+                        addBtn.prop('disabled', false);
                         updateTotal();
                     });
                 }
 
                 if (formCount >= 6) {
-                    addBtn.disabled = true;
+                    addBtn.prop('disabled', true);
                 }
                 updateTotal();
             };
 
-            addBtn.addEventListener('click', addRegistrationForm);
+            addBtn.on('click', addRegistrationForm);
 
             // Initial form
             addRegistrationForm();
 
             // Final validation on submit
-            form.addEventListener('submit', function(e) {
+            form.on('submit', function(e) {
                 let allValid = true;
                 phoneInstances.forEach(p => {
                     const countryData = p.instance.getSelectedCountryData();
