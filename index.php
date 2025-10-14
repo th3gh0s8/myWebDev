@@ -28,6 +28,196 @@
 <?php
 require_once 'db.php'; // Include the database connection
 
+// Process form if submitted
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrations'])) {
+    // Validate and sanitize input data
+    $registrations = [];
+    if (isset($_POST['registrations']) && is_array($_POST['registrations'])) {
+        foreach ($_POST['registrations'] as $index => $registration) {
+            if (is_array($registration)) {
+                $registrations[$index] = [
+                    'name' => isset($registration['name']) ? htmlspecialchars(trim($registration['name']), ENT_QUOTES, 'UTF-8') : '',
+                    'email' => isset($registration['email']) ? filter_var(trim($registration['email']), FILTER_SANITIZE_EMAIL) : '',
+                    'mobile' => isset($registration['mobile']) ? htmlspecialchars(trim($registration['mobile']), ENT_QUOTES, 'UTF-8') : '',
+                    'company_name' => isset($registration['company_name']) ? htmlspecialchars(trim($registration['company_name']), ENT_QUOTES, 'UTF-8') : '',
+                    'company_address' => isset($registration['company_address']) ? htmlspecialchars(trim($registration['company_address']), ENT_QUOTES, 'UTF-8') : ''
+                ];
+            }
+        }
+    }
+
+    // Validate email format and required fields for each registration
+    foreach ($registrations as $key => $reg) {
+        // Check if required fields are present
+        if (empty($reg['name']) || empty($reg['email'])) {
+            http_response_code(400); // Bad Request
+            die("Name and email are required for registration " . ($key + 1) . ". Please ensure all required fields are completed.");
+        }
+        
+        // Validate email format
+        if (!empty($reg['email']) && !filter_var($reg['email'], FILTER_VALIDATE_EMAIL)) {
+            http_response_code(400); // Bad Request
+            die("The email format is invalid for registration " . ($key + 1) . ". Please enter a valid email address.");
+        }
+    }
+
+    // Insert registrations only into the xuser table
+    $successfulInserts = 0;
+    $duplicates = [];
+    try {
+        // The connection $conn is from db.php
+        if ($conn) {
+            // Insert into xuser table
+            $stmt = $conn->prepare("INSERT INTO xuser (name, email, mobile, company_name, company_address) VALUES (?, ?, ?, ?, ?)");
+            if ($stmt === false) {
+                throw new Exception("Prepare failed for xuser table: " . $conn->error);
+            }
+            foreach ($registrations as $reg) {
+                // Only insert if name and email are provided
+                if (!empty($reg['name']) && !empty($reg['email'])) {
+                    // Check if the email already exists
+                    $checkStmt = $conn->prepare("SELECT id FROM xuser WHERE email = ? LIMIT 1");
+                    $checkStmt->bind_param("s", $reg['email']);
+                    $checkStmt->execute();
+                    $result = $checkStmt->get_result();
+                    
+                    if ($result->num_rows > 0) {
+                        // Email already exists, add to duplicates array
+                        $duplicates[] = $reg['email'];
+                        error_log("Duplicate email attempted: " . $reg['email']);
+                        $checkStmt->close();
+                        continue; // Skip to the next registration
+                    }
+                    $checkStmt->close();
+                    
+                    // Insert into xuser table
+                    $stmt->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
+                    if ($stmt->execute()) {
+                        $successfulInserts++;
+                        $totalRegistrations = count($registrations);
+                        
+                        // Determine discount percentage based on total registrations
+                        $discount_percentage = 0;
+                        if ($totalRegistrations == 1) {
+                            $discount_percentage = 35;
+                        } elseif ($totalRegistrations == 2) {
+                            $discount_percentage = 40;
+                        } elseif ($totalRegistrations == 3) {
+                            $discount_percentage = 40;
+                        } elseif ($totalRegistrations == 4) {
+                            $discount_percentage = 50;
+                        } elseif ($totalRegistrations == 5) {
+                            $discount_percentage = 50;
+                        } else {
+                            $discount_percentage = 60; // 6 or more registrations
+                        }
+                        
+                        // Calculate discounted price (original price is 165,000)
+                        $original_price = 165000;
+                        $discounted_price = $original_price * (1 - $discount_percentage / 100);
+                        
+                        // Send email to each registration with the applicable discount
+                        $emailSent = send_thank_you_email($reg['email'], $reg['name'], 'XPOWER Software Suite', number_format($discounted_price, 0, '', ''), $totalRegistrations);
+                        error_log("Email sent status for {$reg['email']}: " . ($emailSent ? 'SUCCESS' : 'FAILED'));
+                    } else {
+                        // Log execution error but continue with other registrations
+                        error_log("Execute failed for email " . $reg['email'] . " in xuser table: " . $stmt->error);
+                    }
+                }
+            }
+            $stmt->close();
+        } else {
+            throw new Exception("Database connection is not available.");
+        }
+    } catch (Exception $e) {
+        error_log("Database error in index.php: " . $e->getMessage());
+        http_response_code(500); // Internal Server Error
+        // Show a professional error to the user, details are logged
+        die("We apologize, but an issue occurred while processing your registration. Our team has been notified and will address the matter promptly. Please try again later.");
+    }
+
+    // Use the first registration's name for the welcome message, fallback to 'Guest'
+    $first_name = 'Guest';
+    foreach ($registrations as $reg) {
+        if (!empty($reg['name'])) {
+            $first_name = $reg['name'];
+            break;
+        }
+    }
+
+    // Display success message
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registration Confirmation - XPOWER</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
+            <div class="container-fluid">
+                <!-- Left: Company Logo -->
+                <a class="navbar-brand" href="#">
+                    <img src="images/logo.png" alt="POWERSOFT Logo" class="navbar-logo">
+                </a>
+
+                <!-- Center: Product Logo (visible on larger screens) -->
+                <img src="images/xLogo.png" alt="XPOWER Logo" class="navbar-center-logo d-none d-lg-block">
+            </div>
+        </nav>
+
+        <div class="container" style="padding-top: 8rem; padding-bottom: 4rem;">
+            <div class="row">
+                <div class="col-lg-8 mx-auto text-center">
+                    <div class="card shadow-lg">
+                        <div class="card-body p-5">
+                            <i class="bi bi-check-circle-fill text-success" style="font-size: 4rem;"></i>
+                            <h1 class="display-4 fw-bold mt-3">Registration Confirmation</h1>
+                            <p class="lead mt-3">Dear <?php echo htmlspecialchars($first_name, ENT_QUOTES, 'UTF-8'); ?>,</p>
+                            <?php if ($successfulInserts > 0 && empty($duplicates)): ?>
+                                <p class="lead my-4">Thank you for registering for the 11.11 Mega Sale. Your registration has been successfully processed. We will contact you with additional information shortly.</p>
+                            <?php elseif ($successfulInserts > 0 && !empty($duplicates)): ?>
+                                <p class="lead my-4">Thank you for registering for the 11.11 Mega Sale. Your new registration has been successfully processed. However, some of the email addresses you provided were already registered.</p>
+                            <?php elseif ($successfulInserts == 0 && !empty($duplicates)): ?>
+                                <p class="lead my-4 text-warning">All provided email addresses are already registered for the 11.11 Mega Sale. No new registrations were added.</p>
+                            <?php else: ?>
+                                <p class="lead my-4 text-warning">An issue occurred while processing your registration. Please try again or contact our support team for assistance.</p>
+                            <?php endif; ?>
+                            
+                            <?php if (!empty($duplicates)): ?>
+                                <div class="alert alert-info mt-3">
+                                    <p class="mb-1"><strong>Registration Details:</strong> The following email addresses were already registered and have been excluded from this submission:</p>
+                                    <ul class="mb-0">
+                                        <?php foreach ($duplicates as $duplicate_email): ?>
+                                            <li><?php echo htmlspecialchars($duplicate_email, ENT_QUOTES, 'UTF-8'); ?></li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            <?php endif; ?>
+                            <a href="index.php" class="btn btn-primary btn-lg">Back to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-white text-center p-4">
+            <div class="container">
+                <p class="mb-0">Copyright by Powersoft Pvt Ltd. All rights reserved.</p>
+            </div>
+        </footer>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+    </html>
+    <?php
+    exit;
+}
+
 // Initialize claimed count and progress
 $claimedCount = 80; // Default value as bait
 $progressPercentage = 0; // Will be calculated from actual data
@@ -56,6 +246,222 @@ if ($conn) {
         // The page will render with default values
         $claimedCount = 80; // Default with bait
         $progressPercentage = (80 / $totalSpots) * 100;
+    }
+}
+
+// Email function
+function send_thank_you_email($to, $name, $product_name, $price, $registration_count = 1) {
+    // Validate email address
+    if (!filter_var($to, FILTER_VALIDATE_EMAIL)) {
+        error_log("Invalid email address provided: $to");
+        return false;
+    }
+    
+    error_log("Attempting to send email to: $to, Name: $name, Registration Count: $registration_count");
+
+    // Determine discount based on registration count
+    $discount_percentage = 0;
+    if ($registration_count == 1) {
+        $discount_percentage = 35;
+    } elseif ($registration_count == 2) {
+        $discount_percentage = 40;
+    } elseif ($registration_count == 3) {
+        $discount_percentage = 40;
+    } elseif ($registration_count == 4) {
+        $discount_percentage = 50;
+    } elseif ($registration_count == 5) {
+        $discount_percentage = 50;
+    } else {
+        $discount_percentage = 60; // 6 or more registrations
+    }
+    
+    // Calculate discounted price based on discount percentage
+    $original_price = 165000; // Original price in rupees
+    $discounted_price = $original_price * (1 - $discount_percentage / 100);
+
+    // Prepare the email content
+    $subject = 'Thank You for Your Purchase! - XPOWER Software';
+    
+    // HTML email content
+    $htmlContent = '<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You for Your Purchase - XPOWER Software!</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 600px;
+      margin: 30px auto;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #007BFF, #0056b3);
+      color: white;
+      text-align: center;
+      padding: 25px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+    .content {
+      padding: 25px;
+      text-align: left;
+      color: #333;
+    }
+    .content h2 {
+      color: #007BFF;
+      font-size: 22px;
+    }
+    .offer {
+      background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+      padding: 20px;
+      margin: 20px 0;
+      border-left: 4px solid #007BFF;
+      border-radius: 6px;
+    }
+    .price-box {
+      text-align: center;
+      padding: 20px;
+      background-color: #f0f8ff;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 18px;
+    }
+    .discounted-price {
+      color: #28a745;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 10px 0;
+    }
+    .discount-badge {
+      display: inline-block;
+      background-color: #dc3545;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .footer {
+      text-align: center;
+      font-size: 13px;
+      color: #666;
+      padding: 20px;
+      background-color: #f8f9fa;
+      border-top: 1px solid #eee;
+    }
+    .footer a {
+      color: #007BFF;
+      text-decoration: none;
+    }
+    .footer a:hover {
+      text-decoration: underline;
+    }
+    .cta-button {
+      display: inline-block;
+      background-color: #007BFF;
+      color: white !important;
+      padding: 12px 30px;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: bold;
+      margin: 15px 0;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Thank You for Your Purchase!</h1>
+    </div>
+    <div class="content">
+      <h2>Hi '.$name.',</h2>
+      <p>We\'re excited to let you know that your order for <strong>XPOWER</strong> has been successfully completed!</p>
+
+      <div class="price-box">
+        <p class="original-price">Original Price: Rs '.$original_price.'</p>
+        <p class="discounted-price">Discounted Price: Rs '.number_format($discounted_price).'</p>
+        <span class="discount-badge">'.$discount_percentage.'% OFF</span>
+      </div>
+
+      <div class="offer">
+        <p><strong>Product:</strong> XPOWER Software Suite</p>
+        <p><strong>Offer:</strong> 11.11 Mega Sale 🎉</p>
+        <p><strong>Discount Applied:</strong> Based on your total of '.$registration_count.' registration(s)</p>
+        <p><strong>Company:</strong> Powersoft Pvt Ltd</p>
+      </div>
+
+      <p>Your purchase details have been sent to your registered email. You can now enjoy the full power of XPOWER — a reliable, efficient, and high-performance solution by Powersoft Pvt Ltd.</p>
+
+      <p>If you have any questions or need assistance, feel free to reach out to our support team at <a href="mailto:support@powersoftt.com">support@powersoftt.com</a>.</p>
+
+      <p>Thank you for choosing <strong>Powersoft Pvt Ltd</strong>. We\'re thrilled to have you on board!</p>
+
+      <p>— The Powersoft Team 💙</p>
+    </div>
+    <div class="footer">
+      <p><strong>Powersoft Pvt Ltd</strong> | <a href="https://powersoftt.com">powersoftt.com</a></p>
+      <p>© 2025 Powersoft Pvt Ltd. All rights reserved.</p>
+    </div>
+  </div>
+</body>
+</html>';
+
+    // Plain text version
+    $textContent = "Thank You for Your Purchase! - XPOWER Software
+Hi $name,
+
+We're excited to let you know that your order for XPOWER has been successfully completed!
+
+Product: XPOWER Software Suite
+Original Price: Rs ".$original_price."
+Discounted Price: Rs ".number_format($discounted_price)." (".$discount_percentage."% OFF)
+Discount Applied: Based on your total of ".$registration_count." registration(s)
+Offer: 11.11 Mega Sale 🎉
+Company: Powersoft Pvt Ltd
+
+Your purchase details have been sent to your registered email. You can now enjoy the full power of XPOWER — a reliable, efficient, and high-performance solution by Powersoft Pvt Ltd.
+
+If you have any questions or need assistance, feel free to reach out to our support team at support@powersoftt.com.
+
+Thank you for choosing Powersoft Pvt Ltd. We're thrilled to have you on board!
+
+— The Powersoft Team 💙
+
+Powersoft Pvt Ltd | powersoftt.com
+© 2025 Powersoft Pvt Ltd. All rights reserved.";
+
+    // Set up headers for HTML email
+    $headers = "MIME-Version: 1.0" . "\r\n";
+    $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+    $headers .= 'From: noreply@go2webadmin.com' . "\r\n";
+    
+    error_log("Attempting to send email using PHP mail() function...");
+    
+    // Try to send the email using PHP's built-in mail() function
+    $result = mail($to, $subject, $htmlContent, $headers);
+    
+    if ($result) {
+        error_log("Email sent successfully to: $to");
+        return true;
+    } else {
+        error_log("Email sending failed for: $to, Name: $name");
+        return false;
     }
 }
 ?>
@@ -117,7 +523,7 @@ if ($conn) {
                     </div>
                     <div class="card-body py-5 px-3">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
-                        <form action="process_form.php" method="POST" id="promo-form">
+                        <form action="index.php" method="POST" id="promo-form">
 
                             <hr class="my-2">
 
