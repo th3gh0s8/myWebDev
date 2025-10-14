@@ -25,6 +25,44 @@
         </div>
     </nav>
     <script src="main.js"></script>
+    
+    <!-- WhatsApp Chat Button -->
+    <a href="https://wa.me/94775656798" target="_blank" class="whatsapp-float" title="Chat with us on WhatsApp">
+        <i class="bi bi-whatsapp"></i>
+    </a>
+    
+    <!-- WhatsApp Chat Button CSS -->
+    <style>
+        .whatsapp-float {
+            position: fixed;
+            width: 60px;
+            height: 60px;
+            bottom: 40px;
+            right: 40px;
+            background-color: #25d366;
+            color: white;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 30px;
+            box-shadow: 2px 2px 3px #999;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-float:hover {
+            background-color: #128C7E;
+            transform: scale(1.1);
+        }
+
+        .whatsapp-float i {
+            font-size: 30px;
+            color: white;
+        }
+    </style>
 
 <?php
 require_once 'db.php'; // Include the database connection
@@ -588,22 +626,42 @@ Powersoft Pvt Ltd | powersoftt.com
         <h2 class="section-title">Trusted By</h2>
         <div class="row text-center justify-content-center align-items-center gy-4">
             <div class="col-lg-2 col-md-4 col-6">
-                <img src="images/bbc.jpg" alt="BBC" class="client-logo img-fluid">
+                <img src="images/customer-logos/airtel.png" alt="Airtel" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <img src="images/bmv.jpg" alt="BMW" class="client-logo img-fluid">
+                <img src="images/customer-logos/mobitel.png" alt="Mobitel" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <img src="images/taco-bell.png" alt="Taco Bell" class="client-logo img-fluid">
+                <img src="images/customer-logos/lakTyles.png" alt="Lak Tyles" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <img src="images/horsy.png" alt="Horsy" class="client-logo img-fluid">
+                <img src="images/customer-logos/hucth.png" alt="HUCTH" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <img src="images/putsy.png" alt="Putsy" class="client-logo img-fluid">
+                <img src="images/customer-logos/malibung.png" alt="Malibung" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <img src="images/circle-woman-.png" alt="Circle Woman" class="client-logo img-fluid">
+                <img src="images/customer-logos/s_lon.png" alt="Sri Lanka Online" class="client-logo img-fluid">
+            </div>
+        </div>
+        <div class="row text-center justify-content-center align-items-center gy-4 mt-3">
+            <div class="col-lg-2 col-md-4 col-6">
+                <img src="images/customer-logos/Muchee.png" alt="Muchee" class="client-logo img-fluid">
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <img src="images/customer-logos/InSee.png" alt="InSee" class="client-logo img-fluid">
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <img src="images/customer-logos/XTigi.png" alt="XTigi" class="client-logo img-fluid">
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <img src="images/customer-logos/ORange.png" alt="ORange" class="client-logo img-fluid">
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <img src="images/customer-logos/Ceylon_Steel_Corp.png" alt="Ceylon Steel Corp" class="client-logo img-fluid">
+            </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <img src="images/customer-logos/kechaodax.png" alt="Kechaodax" class="client-logo img-fluid">
             </div>
         </div>
     </div>
