@@ -471,8 +471,8 @@ body {
 
 /* Client logos styling */
 .client-logo {
-    max-height: 60px;
-    max-width: 100%;
+    max-height: 80px;
+    max-width: 200px;
     object-fit: contain;
     opacity: 0.7;
     transition: opacity 0.3s ease;
