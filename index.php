@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/css/intlTelInput.min.css">
+    <link rel="icon" href="images/metaXlogo.png" type="image/png">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
