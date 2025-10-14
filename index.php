@@ -65,7 +65,7 @@
     </style>
 
 <?php
-require_once 'db.php'; // Include the database connection
+require_once '../connection_log.php'; // Include the database connection
 
 // Process form if submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrations'])) {
@@ -104,18 +104,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrations'])) {
     $successfulInserts = 0;
     $duplicates = [];
     try {
-        // The connection $conn is from db.php
-        if ($conn) {
-            // Insert into xuser table
-            $stmt = $conn->prepare("INSERT INTO xuser (name, email, mobile, company_name, company_address) VALUES (?, ?, ?, ?, ?)");
+        // The connection $xdatalogin is from connection_log.php
+        if ($xdatalogin) {
+            // Insert into xpower_buy_users table with default values for new columns
+            $stmt = $xdatalogin->prepare("INSERT INTO xpower_buy_users (fullName, email_address, mobile_number, com_name, com_address, is_paid, ip_address, user_country, rDateTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
             if ($stmt === false) {
-                throw new Exception("Prepare failed for xuser table: " . $conn->error);
+                throw new Exception("Prepare failed for xpower_buy_users table: " . $xdatalogin->error);
             }
             foreach ($registrations as $reg) {
                 // Only insert if name and email are provided
                 if (!empty($reg['name']) && !empty($reg['email'])) {
                     // Check if the email already exists
-                    $checkStmt = $conn->prepare("SELECT id FROM xuser WHERE email = ? LIMIT 1");
+                    $checkStmt = $xdatalogin->prepare("SELECT ID FROM xpower_buy_users WHERE email_address = ? LIMIT 1");
                     $checkStmt->bind_param("s", $reg['email']);
                     $checkStmt->execute();
                     $result = $checkStmt->get_result();
@@ -129,8 +129,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrations'])) {
                     }
                     $checkStmt->close();
                     
-                    // Insert into xuser table
-                    $stmt->bind_param("sssss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address']);
+                    // Set default values for new columns
+                    $is_paid = 0; // Default to not paid
+                    $ip_address = $_SERVER['REMOTE_ADDR'] ?? 'unknown'; // Get user's IP address
+                    $user_country = 'unknown'; // Default value, could implement geolocation if required
+                    $rDateTime = date('Y-m-d H:i:s'); // Current date and time
+
+                    // Insert into xpower_buy_users table with all required parameters
+                    $stmt->bind_param("ssssssiss", $reg['name'], $reg['email'], $reg['mobile'], $reg['company_name'], $reg['company_address'], $is_paid, $ip_address, $user_country, $rDateTime);
                     if ($stmt->execute()) {
                         $successfulInserts++;
                         $totalRegistrations = count($registrations);
@@ -262,10 +268,10 @@ $claimedCount = 80; // Default value as bait
 $progressPercentage = 0; // Will be calculated from actual data
 $totalSpots = 200;
 
-if ($conn) {
+if ($xdatalogin) {
     try {
-        // Query to get the number of registrations from xuser table
-        $result = $conn->query("SELECT COUNT(*) as count FROM xuser");
+        // Query to get the number of registrations from xpower_buy_users table
+        $result = $xdatalogin->query("SELECT COUNT(*) as count FROM xpower_buy_users");
         if ($result) {
             $row = $result->fetch_assoc();
             $registrationCount = $row['count'];
@@ -714,6 +720,15 @@ Powersoft Pvt Ltd | powersoftt.com
                 } else {
                     navbar.classList.remove('bg-light', 'shadow-sm');
                     navbar.classList.add('navbar-transparent');
+                }
+            });
+            
+            // Navbar hiding functionality from main.js
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('navbar-hidden');
+                } else {
+                    navbar.classList.remove('navbar-hidden');
                 }
             });
 
