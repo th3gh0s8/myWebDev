@@ -156,22 +156,22 @@ include 'header.php';
         <h2 class="section-title">Trusted By</h2>
         <div class="row text-center justify-content-center align-items-center gy-4">
             <div class="col-lg-2 col-md-4 col-6">
-                <h3 class="h4 text-muted d-flex align-items-center justify-content-center"><i class="bi bi-building me-2"></i>CompanyOne</h3>
+                <img src="images/bbc.jpg" alt="BBC" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <h3 class="h4 text-muted d-flex align-items-center justify-content-center"><i class="bi bi-bar-chart-line me-2"></i>Statistica</h3>
+                <img src="images/bmv.jpg" alt="BMW" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <h3 class="h4 text-muted d-flex align-items-center justify-content-center"><i class="bi bi-globe me-2"></i>Global Corp</h3>
+                <img src="images/taco-bell.png" alt="Taco Bell" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <h3 class="h4 text-muted d-flex align-items-center justify-content-center"><i class="bi bi-gem me-2"></i>Jewel Co</h3>
+                <img src="images/horsy.png" alt="Horsy" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <h3 class="h4 text-muted d-flex align-items-center justify-content-center"><i class="bi bi-cone-striped me-2"></i>BuildIt</h3>
+                <img src="images/putsy.png" alt="Putsy" class="client-logo img-fluid">
             </div>
             <div class="col-lg-2 col-md-4 col-6">
-                <h3 class="h4 text-muted d-flex align-items-center justify-content-center"><i class="bi bi-p-circle me-2"></i>Proactive</h3>
+                <img src="images/circle-woman-.png" alt="Circle Woman" class="client-logo img-fluid">
             </div>
         </div>
     </div>

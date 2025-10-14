@@ -469,6 +469,19 @@ body {
     resize: vertical; /* Only allow vertical resizing */
 }
 
+/* Client logos styling */
+.client-logo {
+    max-height: 60px;
+    max-width: 100%;
+    object-fit: contain;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.client-logo:hover {
+    opacity: 1;
+}
+
 @media (max-width: 767.98px) {
     #promo-form .form-control {
         max-width: 100%; /* Full width on mobile */
