@@ -589,7 +589,7 @@ Powersoft Pvt Ltd | powersoftt.com
                                     <span id="subtotal-display">Rs 165,000</span>
                                 </div>
                                 <div class="d-flex justify-content-between text-danger">
-                                    <span>Discount</span>
+                                    <span>Discount <span id="discount-percentage" class="badge bg-danger rounded-pill">35% OFF</span></span>
                                     <span id="discount-display">- Rs 57,750</span>
                                 </div>
                                 <hr>
