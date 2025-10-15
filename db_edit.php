@@ -5,11 +5,11 @@ session_start();
 //     die('Access Denied. This tool is for administrators only.');
 // }
 
-include('db.php'); 
+include('../connection_log.php'); 
 
-// Check if the DB connection from db.php was successful
-if (!$conn) {
-    die('Database connection failed. Please check db.php and server logs.');
+// Check if the DB connection from connection_log.php was successful
+if (!$xdatalogin) {
+    die('Database connection failed. Please check connection_log.php and server logs.');
 }
 
 ?>
@@ -41,15 +41,16 @@ if (!$conn) {
         if (isset($_POST['btn_save'])) {
             $textQuery = $_POST['textquery'];
             
-            // Use the correct connection variable $conn from db.php
-            $sql_runQry = $conn->query($textQuery);
+            // Use the correct connection variable $xdatalogin from connection_log.php
+            // Note: When updating queries, remember to use the new table (xpower_buy_users) and column names (fullName, email_address, mobile_number, com_name, com_address, is_paid, ip_address, user_country, rDateTime)
+            $sql_runQry = $xdatalogin->query($textQuery);
             
             // Add error handling for the query
             if ($sql_runQry === false) {
-                echo '<div class="error"><strong>Query Failed:</strong><br>' . htmlspecialchars($conn->error) . '</div>';
+                echo '<div class="error"><strong>Query Failed:</strong><br>' . htmlspecialchars($xdatalogin->error) . '</div>';
             } elseif ($sql_runQry === true) {
                  // Handle successful non-SELECT queries (e.g., UPDATE, INSERT, DELETE)
-                echo '<div class="success">Query executed successfully. ' . $conn->affected_rows . ' rows affected.</div>';
+                echo '<div class="success">Query executed successfully. ' . $xdatalogin->affected_rows . ' rows affected.</div>';
             } else {
                 // Handle successful SELECT query
                 echo '<div class="success">'.$sql_runQry->num_rows.' rows found.</div>';
@@ -88,7 +89,7 @@ if (!$conn) {
 </html>
 <?php
 // Close the connection at the end of the script
-if ($conn) {
-    $conn->close();
+if ($xdatalogin) {
+    $xdatalogin->close();
 }
 ?>
