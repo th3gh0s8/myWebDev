@@ -10,14 +10,16 @@ $conn = null; // Initialize $conn
 
 try {
     $servername = "localhost";
-    // $username = "root";
-    // $password = "Pasindu@12236";
-    // $dbname = "washio";
 
-    $username = "pw_washio";
-    $password = "washio-2025-09-27";
-    $dbname = "pw_washio_db";
-    $port = 3306; 
+    $username = "root";
+    $password = "Pasindu@12236";
+    $dbname = "washio";
+    $port = 3307;
+
+    // $username = "pw_washio";
+    // $password = "washio-2025-09-27";
+    // $dbname = "pw_washio_db";
+    // $port = 3306;
 
     $db_connection_error_message = 'Connection not attempted or failed before error property set.';
 
@@ -36,7 +38,7 @@ try {
     if (@mysqli_real_connect($link, $servername, $username, $password, $dbname, $port)) {
         $conn = $link;
     } else {
-        $db_connection_error_message = mysqli_connect_error(); 
+        $db_connection_error_message = mysqli_connect_error();
         // error_log already happens if we throw
         throw new Exception("DB Connection Error: " . $db_connection_error_message);
     }
@@ -51,17 +53,17 @@ try {
 
 } catch (Exception $e) {
     error_log("Exception in db.php: " . $e->getMessage() . " (Details: Server=$servername, User=$username, DB=$dbname, Port=$port)");
-    
+
     // Ensure no prior output interferes with JSON
     if (ob_get_level() > 0) {
         ob_end_clean(); // Clean any previous output buffer
     }
-    
+
     // Set JSON header if not already sent
     if (!headers_sent()) {
         header('Content-Type: application/json');
     }
-    
+
     echo json_encode([
         'status' => 'error',
         'message' => 'PHP DB Connection Critical: ' . $e->getMessage(),
@@ -69,6 +71,6 @@ try {
     ]);
     exit; // Stop script execution after sending JSON error
 }
-// No ob_end_flush() here, as db.php is included. 
+// No ob_end_flush() here, as db.php is included.
 // The script that includes it (e.g., request_otp.php) will handle the final output.
 ?>
