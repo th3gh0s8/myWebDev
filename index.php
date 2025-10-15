@@ -90,6 +90,9 @@ $conn->close();
 
     <!-- Include jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Include Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
         body {
@@ -210,6 +213,65 @@ $conn->close();
             gap: 15px;
             align-items: center;
         }
+        
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto;
+            padding: 0;
+            border: 1px solid #888;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow: auto;
+            position: relative;
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            background-color: #f9f9f9;
+            border-bottom: 1px solid #e0e0e0;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            color: #333;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
     </style>
 </head>
 <body>
@@ -246,6 +308,53 @@ $conn->close();
                 </div>
             </div>
         </div>
+        
+        <div class="info-panel">
+            <p>Showing <?php echo count($fps_data); ?> of <?php echo $total_count; ?> records</p>
+        </div>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th data-sort="id">ID <?php echo $sort_by === 'id' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
+                    <th data-sort="timestamp">Timestamp <?php echo $sort_by === 'timestamp' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
+                    <th data-sort="fps_value">FPS <?php echo $sort_by === 'fps_value' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
+                    <th data-sort="page_url">Page URL <?php echo $sort_by === 'page_url' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
+                    <th data-sort="session_id">Session ID <?php echo $sort_by === 'session_id' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($fps_data)): ?>
+                    <?php foreach ($fps_data as $row): ?>
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['id']); ?></td>
+                            <td><?php echo htmlspecialchars($row['timestamp']); ?></td>
+                            <td><?php echo htmlspecialchars($row['fps_value']); ?></td>
+                            <td><?php echo htmlspecialchars($row['page_url']); ?></td>
+                            <td><?php echo htmlspecialchars($row['session_id']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="5">No records found</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+        
+        <!-- Include FPS Chart Modal -->
+        <div id="chartModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>FPS Performance Charts</h2>
+                    <span class="close">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <!-- Chart content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
 
         <div class="info-panel">
             <p>Showing <?php echo count($fps_data); ?> of <?php echo $total_count; ?> records</p>
@@ -315,7 +424,7 @@ $conn->close();
                 const sessionId = $('#session_id_filter').val();
 
                 // Build URL for chart page with current filters
-                let chartUrl = 'fps_chart.php';
+                let chartUrl = 'chart_modal.php';
                 let params = [];
 
                 if (limit) params.push('limit=' + limit);
@@ -326,7 +435,32 @@ $conn->close();
                     chartUrl += '?' + params.join('&');
                 }
 
-                window.open(chartUrl, '_blank');
+                // Load the modal content via AJAX
+                $.get(chartUrl, function(data) {
+                    $('#chartModal .modal-body').html(data);
+                    $('#chartModal').show();
+                    
+                    // Reinitialize Chart.js after content is loaded
+                    setTimeout(function() {
+                        if (typeof Chart !== 'undefined') {
+                            // Charts will be initialized by the loaded content
+                        }
+                    }, 100);
+                }).fail(function() {
+                    alert('Error loading chart data');
+                });
+            });
+            
+            // Modal close functionality
+            $('.close, #chartModal').click(function(e) {
+                if (e.target === this || $(e.target).hasClass('close')) {
+                    $('#chartModal').hide();
+                }
+            });
+            
+            // Prevent modal content from closing when clicked
+            $('.modal-content').click(function(e) {
+                e.stopPropagation();
             });
 
             // Sorting functionality
