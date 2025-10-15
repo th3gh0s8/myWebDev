@@ -568,20 +568,12 @@ Powersoft Pvt Ltd | powersoftt.com
                     </div>
                     <div class="card-body py-5 px-3">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
-                        <div class="text-center mb-3">
-                            <span class="badge bg-success fs-5">Current Discount: <span id="current-discount">35%</span> OFF</span>
-                        </div>
                         <form action="index.php" method="POST" id="promo-form">
-
-                            <hr class="my-2">
-
                             <div id="registration-forms-container" class="accordion"></div>
 
                             <div class="d-grid my-2">
                                 <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More for Bigger Discounts!</button>
                             </div>
-
-
 
                             <div id="total-summary" class="p-3 bg-light rounded">
                                 <div class="d-flex justify-content-between">
@@ -589,7 +581,7 @@ Powersoft Pvt Ltd | powersoftt.com
                                     <span id="subtotal-display">Rs 165,000</span>
                                 </div>
                                 <div class="d-flex justify-content-between text-danger">
-                                    <span>Discount</span>
+                                    <span>Discount <span class="badge bg-success fs-5"><span id="current-discount">35%</span> OFF</span></span>
                                     <span id="discount-display">- Rs 57,750</span>
                                 </div>
                                 <hr>
@@ -787,9 +779,6 @@ Powersoft Pvt Ltd | powersoftt.com
                 subtotalDisplay.textContent = `Rs ${subtotal.toLocaleString('en-US')}`;
                 discountDisplay.textContent = `- Rs ${discountAmount.toLocaleString('en-US')}`;
                 totalDisplay.textContent = `Rs ${finalTotal.toLocaleString('en-US')}`;
-                
-                // Update discount percentage display
-                document.getElementById('discount-percentage').textContent = `${discountPercentage}% OFF`;
                 
                 // Also update the current discount badge
                 document.getElementById('current-discount').textContent = `${discountPercentage}%`;
