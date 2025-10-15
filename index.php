@@ -590,7 +590,6 @@ Powersoft Pvt Ltd | powersoftt.com
                                     <span id="total-price-display">Rs 107,250</span>
                                 </div>
                             </div>
-
                             <div class="d-grid mt-2">
                                 <button type="submit" class="btn btn-primary btn-lg">Claim Offer</button>
                             </div>
