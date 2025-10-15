@@ -9,17 +9,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/css/intlTelInput.min.css">
     <link rel="icon" href="images/metaXlogo.png" type="image/png">
-    <style>
-        .discount-badge {
-            display: inline-block;
-            background-color: #dc3545;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
@@ -212,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrations'])) {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="style.css">
+
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
@@ -403,7 +395,7 @@ function send_thank_you_email($to, $name, $product_name, $price, $registration_c
       font-weight: bold;
       margin: 10px 0;
     }
-    .discount-badge {
+    .new-discount-badge {
       display: inline-block;
       background-color: #dc3545;
       color: white;
@@ -452,7 +444,7 @@ function send_thank_you_email($to, $name, $product_name, $price, $registration_c
       <div class="price-box">
         <p class="original-price">Original Price: Rs '.$original_price.'</p>
         <p class="discounted-price">Discounted Price: Rs '.number_format($discounted_price).'</p>
-        <span class="discount-badge">'.$discount_percentage.'% OFF</span>
+        <span class="new-discount-badge">'.$discount_percentage.'% OFF</span>
       </div>
 
       <div class="offer">
@@ -592,7 +584,7 @@ Powersoft Pvt Ltd | powersoftt.com
                                     <span id="subtotal-display">Rs 165,000</span>
                                 </div>
                                 <div class="d-flex justify-content-between text-danger">
-                                    <span>Discount <span class="discount-badge"><span id="current-discount">35%</span> OFF</span></span>
+                                    <span>Discount <span class="new-discount-badge"><span id="current-discount">35%</span> OFF</span></span>
                                     <span id="discount-display">- Rs 57,750</span>
                                 </div>
                                 <hr>
