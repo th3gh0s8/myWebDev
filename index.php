@@ -6,9 +6,11 @@
     <title>XPOWER - Your Trusted Technology Partner</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="style.css">
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/css/intlTelInput.min.css">
     <link rel="icon" href="images/metaXlogo.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
@@ -201,6 +203,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['registrations'])) {
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
         <link rel="stylesheet" href="style.css">
+
     </head>
     <body>
         <nav class="navbar navbar-expand-lg navbar-light fixed-top navbar-transparent">
@@ -392,7 +395,7 @@ function send_thank_you_email($to, $name, $product_name, $price, $registration_c
       font-weight: bold;
       margin: 10px 0;
     }
-    .discount-badge {
+    .new-discount-badge {
       display: inline-block;
       background-color: #dc3545;
       color: white;
@@ -441,7 +444,7 @@ function send_thank_you_email($to, $name, $product_name, $price, $registration_c
       <div class="price-box">
         <p class="original-price">Original Price: Rs '.$original_price.'</p>
         <p class="discounted-price">Discounted Price: Rs '.number_format($discounted_price).'</p>
-        <span class="discount-badge">'.$discount_percentage.'% OFF</span>
+        <span class="new-discount-badge">'.$discount_percentage.'% OFF</span>
       </div>
 
       <div class="offer">
@@ -568,20 +571,12 @@ Powersoft Pvt Ltd | powersoftt.com
                     </div>
                     <div class="card-body py-5 px-3">
                         <h3 class="card-title text-center mb-4">Register & Buy Now</h3>
-                        <div class="text-center mb-3">
-                            <span class="badge bg-success fs-5">Current Discount: <span id="current-discount">35%</span> OFF</span>
-                        </div>
                         <form action="index.php" method="POST" id="promo-form">
-
-                            <hr class="my-2">
-
                             <div id="registration-forms-container" class="accordion"></div>
 
                             <div class="d-grid my-2">
                                 <button type="button" id="add-form-btn" class="btn btn-lg btn-outline-success">+ Add More for Bigger Discounts!</button>
                             </div>
-
-
 
                             <div id="total-summary" class="p-3 bg-light rounded">
                                 <div class="d-flex justify-content-between">
@@ -589,7 +584,7 @@ Powersoft Pvt Ltd | powersoftt.com
                                     <span id="subtotal-display">Rs 165,000</span>
                                 </div>
                                 <div class="d-flex justify-content-between text-danger">
-                                    <span>Discount <span id="discount-percentage" class="badge bg-danger rounded-pill">35% OFF</span></span>
+                                    <span>Discount <span class="new-discount-badge"><span id="current-discount">35%</span> OFF</span></span>
                                     <span id="discount-display">- Rs 57,750</span>
                                 </div>
                                 <hr>
@@ -598,7 +593,6 @@ Powersoft Pvt Ltd | powersoftt.com
                                     <span id="total-price-display">Rs 107,250</span>
                                 </div>
                             </div>
-
                             <div class="d-grid mt-2">
                                 <button type="submit" class="btn btn-primary btn-lg">Claim Offer</button>
                             </div>
@@ -787,9 +781,6 @@ Powersoft Pvt Ltd | powersoftt.com
                 subtotalDisplay.textContent = `Rs ${subtotal.toLocaleString('en-US')}`;
                 discountDisplay.textContent = `- Rs ${discountAmount.toLocaleString('en-US')}`;
                 totalDisplay.textContent = `Rs ${finalTotal.toLocaleString('en-US')}`;
-                
-                // Update discount percentage display
-                document.getElementById('discount-percentage').textContent = `${discountPercentage}% OFF`;
                 
                 // Also update the current discount badge
                 document.getElementById('current-discount').textContent = `${discountPercentage}%`;
