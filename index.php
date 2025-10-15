@@ -711,32 +711,33 @@ Powersoft Pvt Ltd | powersoftt.com
         </div>
     </footer>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/js/intlTelInput.min.js"></script>
     <script>
-        $(document).ready(function() {
-            const navbar = $('.navbar');
-            $(window).on('scroll', function() {
-                if ($(window).scrollTop() > 50) {
-                    navbar.addClass('bg-light shadow-sm').removeClass('navbar-transparent');
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('bg-light', 'shadow-sm');
+                    navbar.classList.remove('navbar-transparent');
                 } else {
-                    navbar.removeClass('bg-light shadow-sm').addClass('navbar-transparent');
+                    navbar.classList.remove('bg-light', 'shadow-sm');
+                    navbar.classList.add('navbar-transparent');
                 }
             });
             
             // Navbar hiding functionality from main.js
-            $(window).on('scroll', function() {
-                if ($(window).scrollTop() > 100) {
-                    navbar.addClass('navbar-hidden');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('navbar-hidden');
                 } else {
-                    navbar.removeClass('navbar-hidden');
+                    navbar.classList.remove('navbar-hidden');
                 }
             });
 
             // Countdown Timer
-            const countdownElement = $('#countdown');
-            if (countdownElement.length) {
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
                 const targetDate = new Date('2025-11-11T00:00:00').getTime();
                 const interval = setInterval(() => {
                     const now = new Date().getTime();
@@ -745,21 +746,21 @@ Powersoft Pvt Ltd | powersoftt.com
                     const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                     const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                    countdownElement.html(`<div class=\"countdown-item\"><span>${days}</span> Days</div><div class=\"countdown-item\"><span>${hours}</span> Hours</div><div class=\"countdown-item\"><span>${minutes}</span> Minutes</div><div class=\"countdown-item\"><span>${seconds}</span> Seconds</div>`);
+                    countdownElement.innerHTML = `<div class=\"countdown-item\"><span>${days}</span> Days</div><div class=\"countdown-item\"><span>${hours}</span> Hours</div><div class=\"countdown-item\"><span>${minutes}</span> Minutes</div><div class=\"countdown-item\"><span>${seconds}</span> Seconds</div>`;
                     if (distance < 0) {
                         clearInterval(interval);
-                        countdownElement.html('<div class=\"countdown-item\"><span>EXPIRED</span></div>');
+                        countdownElement.innerHTML = '<div class=\"countdown-item\"><span>EXPIRED</span></div>';
                     }
                 }, 1000);
             }
 
             // Multi-form Registration Logic
-            const form = $('#promo-form');
-            const container = $('#registration-forms-container');
-            const addBtn = $('#add-form-btn');
-            const subtotalDisplay = $('#subtotal-display');
-            const discountDisplay = $('#discount-display');
-            const totalDisplay = $('#total-price-display');
+            const form = document.getElementById('promo-form');
+            const container = document.getElementById('registration-forms-container');
+            const addBtn = document.getElementById('add-form-btn');
+            const subtotalDisplay = document.getElementById('subtotal-display');
+            const discountDisplay = document.getElementById('discount-display');
+            const totalDisplay = document.getElementById('total-price-display');
 
             const basePrice = 165000;
             let formCount = 0;
@@ -776,22 +777,22 @@ Powersoft Pvt Ltd | powersoftt.com
             };
 
             const updateTotal = () => {
-                const count = container.children().length;
+                const count = container.children.length;
                 const discountRate = getDiscountRate(count);
                 const discountPercentage = Math.round(discountRate * 100); // Convert to percentage
                 const subtotal = count * basePrice;
                 const discountAmount = subtotal * discountRate;
                 const finalTotal = subtotal - discountAmount;
 
-                subtotalDisplay.text(`Rs ${subtotal.toLocaleString('en-US')}`);
-                discountDisplay.text(`- Rs ${discountAmount.toLocaleString('en-US')}`);
-                totalDisplay.text(`Rs ${finalTotal.toLocaleString('en-US')}`);
+                subtotalDisplay.textContent = `Rs ${subtotal.toLocaleString('en-US')}`;
+                discountDisplay.textContent = `- Rs ${discountAmount.toLocaleString('en-US')}`;
+                totalDisplay.textContent = `Rs ${finalTotal.toLocaleString('en-US')}`;
                 
                 // Update discount percentage display
-                $('#discount-percentage').text(`${discountPercentage}% OFF`);
+                document.getElementById('discount-percentage').textContent = `${discountPercentage}% OFF`;
                 
                 // Also update the current discount badge
-                $('#current-discount').text(`${discountPercentage}%`);
+                document.getElementById('current-discount').textContent = `${discountPercentage}%`;
             };
 
             const addRegistrationForm = () => {
@@ -801,14 +802,16 @@ Powersoft Pvt Ltd | powersoftt.com
                 const formId = `reg-form-${formCount}`;
                 const isFirst = formCount === 1;
 
-                const template = $(`<div class="accordion-item">
-                    <h2 class="accordion-header" id="heading-${formId}">
-                        <button class="accordion-button ${isFirst ? '' : 'collapsed'}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-${formId}" aria-expanded="${isFirst}" aria-controls="collapse-${formId}">
+                const template = document.createElement('div');
+                template.className = 'accordion-item';
+                template.innerHTML = `
+                    <h2 class=\"accordion-header\" id=\"heading-${formId}\">
+                        <button class=\"accordion-button ${isFirst ? '' : 'collapsed'}\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#collapse-${formId}\" aria-expanded=\"${isFirst}\" aria-controls=\"collapse-${formId}\">
                             Registration #${formCount}
                         </button>
                     </h2>
-                    <div id="collapse-${formId}" class="accordion-collapse collapse ${isFirst ? 'show' : ''}" aria-labelledby="heading-${formId}">
-                        <div class="accordion-body">
+                    <div id=\"collapse-${formId}\" class=\"accordion-collapse collapse ${isFirst ? 'show' : ''}\" aria-labelledby=\"heading-${formId}\">
+                        <div class=\"accordion-body\">
                             ${!isFirst ? '<button type="button" class="btn btn-sm btn-danger float-end remove-form-btn">Remove</button>' : ''}
                             <div class="mb-3">
                                 <label class="form-label">Full Name</label>
@@ -832,10 +835,10 @@ Powersoft Pvt Ltd | powersoftt.com
                             </div>
                         </div>
                     </div>
-                </div>`);
-                container.append(template);
+                `;
+                container.appendChild(template);
 
-                const phoneInputEl = template.find('.phone-input')[0];
+                const phoneInputEl = template.querySelector('.phone-input');
                 const phoneInput = window.intlTelInput(phoneInputEl, {
                     utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@latest/build/js/utils.js",
                     nationalMode: true, initialCountry: "auto",
@@ -848,31 +851,31 @@ Powersoft Pvt Ltd | powersoftt.com
                     phoneInputEl.maxLength = (countryData.iso2 === 'lk') ? 10 : phoneInput.getNumberPlaceholder().replace(/\D/g, '').length;
                 };
                 phoneInput.promise.then(updateMaxLength);
-                $(phoneInputEl).on('countrychange', updateMaxLength);
+                phoneInputEl.addEventListener('countrychange', updateMaxLength);
 
                 if (!isFirst) {
-                    template.find('.remove-form-btn').on('click', () => {
+                    template.querySelector('.remove-form-btn').addEventListener('click', () => {
                         phoneInstances = phoneInstances.filter(p => p.id !== formId);
                         template.remove();
                         formCount--;
-                        addBtn.prop('disabled', false);
+                        addBtn.disabled = false;
                         updateTotal();
                     });
                 }
 
                 if (formCount >= 6) {
-                    addBtn.prop('disabled', true);
+                    addBtn.disabled = true;
                 }
                 updateTotal();
             };
 
-            addBtn.on('click', addRegistrationForm);
+            addBtn.addEventListener('click', addRegistrationForm);
 
             // Initial form
             addRegistrationForm();
 
             // Final validation on submit
-            form.on('submit', function(e) {
+            form.addEventListener('submit', function(e) {
                 let allValid = true;
                 phoneInstances.forEach(p => {
                     const countryData = p.instance.getSelectedCountryData();
