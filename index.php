@@ -356,40 +356,6 @@ $conn->close();
         </div>
     </div>
 
-        <div class="info-panel">
-            <p>Showing <?php echo count($fps_data); ?> of <?php echo $total_count; ?> records</p>
-        </div>
-
-        <table id="dataTable">
-            <thead>
-                <tr>
-                    <th data-sort="id">ID <?php echo $sort_by === 'id' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
-                    <th data-sort="timestamp">Timestamp <?php echo $sort_by === 'timestamp' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
-                    <th data-sort="fps_value">FPS <?php echo $sort_by === 'fps_value' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
-                    <th data-sort="page_url">Page URL <?php echo $sort_by === 'page_url' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
-                    <th data-sort="session_id">Session ID <?php echo $sort_by === 'session_id' ? '<span class="sort-indicator">' . ($sort_order === 'ASC' ? '↑' : '↓') : ''; ?></span></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if (!empty($fps_data)): ?>
-                    <?php foreach ($fps_data as $row): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($row['id']); ?></td>
-                            <td><?php echo htmlspecialchars($row['timestamp']); ?></td>
-                            <td><?php echo htmlspecialchars($row['fps_value']); ?></td>
-                            <td><?php echo htmlspecialchars($row['page_url']); ?></td>
-                            <td><?php echo htmlspecialchars($row['session_id']); ?></td>
-                        </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr>
-                        <td colspan="5">No records found</td>
-                    </tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
-    </div>
-
     <script>
         $(document).ready(function() {
             // Apply filters button event
@@ -422,6 +388,7 @@ $conn->close();
                 const limit = $('#limit').val();
                 const pageUrl = $('#page_url_filter').val();
                 const sessionId = $('#session_id_filter').val();
+                const chartType = $('#chart-type').val(); // Get the selected chart type
 
                 // Build URL for chart page with current filters
                 let chartUrl = 'chart_modal.php';
@@ -430,6 +397,7 @@ $conn->close();
                 if (limit) params.push('limit=' + limit);
                 if (pageUrl) params.push('page_url=' + encodeURIComponent(pageUrl));
                 if (sessionId) params.push('session_id=' + encodeURIComponent(sessionId));
+                if (chartType) params.push('chart_type=' + encodeURIComponent(chartType)); // Add chart type
 
                 if (params.length > 0) {
                     chartUrl += '?' + params.join('&');
