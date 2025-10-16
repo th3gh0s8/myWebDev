@@ -431,9 +431,31 @@ $fps_json = json_encode($fps_data);
     const ctx = document.getElementById('chartCanvas').getContext('2d');
     const chart = new Chart(ctx, chartConfig);
 
+    // Store chart type to maintain the same chart type on refresh
+    const currentChartType = chartType;
+    
     // Refresh button functionality
     document.getElementById('refresh-chart')?.addEventListener('click', function() {
-        location.reload();
+        // Get current parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const limit = urlParams.get('limit') || '100';
+        const pageUrl = urlParams.get('page_url');
+        const sessionId = urlParams.get('session_id');
+        
+        // Reload content with current parameters
+        const refreshUrl = `chart_modal.php?limit=${limit}${pageUrl ? '&page_url=' + encodeURIComponent(pageUrl) : ''}${sessionId ? '&session_id=' + encodeURIComponent(sessionId) : ''}${currentChartType ? '&chart_type=' + currentChartType : ''}`;
+        
+        // Get the modal body element (assuming it's available in parent context)
+        if (typeof $ !== 'undefined') {
+            $.get(refreshUrl, function(data) {
+                $('.modal-body').html(data);
+            }).fail(function() {
+                alert('Error refreshing chart data');
+            });
+        } else {
+            // Fallback to location reload if jQuery not available
+            location.reload();
+        }
     });
     
     // Modal functionality
