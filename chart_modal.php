@@ -431,32 +431,154 @@ $fps_json = json_encode($fps_data);
     const ctx = document.getElementById('chartCanvas').getContext('2d');
     const chart = new Chart(ctx, chartConfig);
 
-    // Store chart type to maintain the same chart type on refresh
-    const currentChartType = chartType;
-    
-    // Refresh button functionality
-    document.getElementById('refresh-chart')?.addEventListener('click', function() {
+    // Function to update the chart with new data
+    function updateChart(newData) {
+        // Convert new data to the required format
+        const newLabels = newData.map(item => new Date(item.timestamp).toLocaleTimeString());
+        const newDataPoints = newData.map(item => parseFloat(item.fps_value));
+
+        // Update chart data based on chart type
+        switch(chartType) {
+            case 'line':
+            case 'bar':
+                chart.data.labels = newLabels;
+                chart.data.datasets[0].data = newDataPoints;
+                break;
+                
+            case 'pie':
+                // For pie chart, group FPS values into ranges
+                const newFpsRanges = {
+                    '0-15': 0,
+                    '16-30': 0,
+                    '31-45': 0,
+                    '46-60': 0
+                };
+                
+                newDataPoints.forEach(fps => {
+                    if (fps <= 15) newFpsRanges['0-15']++;
+                    else if (fps <= 30) newFpsRanges['16-30']++;
+                    else if (fps <= 45) newFpsRanges['31-45']++;
+                    else newFpsRanges['46-60']++;
+                });
+                
+                chart.data.datasets[0].data = [
+                    newFpsRanges['0-15'],
+                    newFpsRanges['16-30'],
+                    newFpsRanges['31-45'],
+                    newFpsRanges['46-60']
+                ];
+                
+                if (chartType === 'pie') {
+                    chart.data.labels = ['0-15 FPS', '16-30 FPS', '31-45 FPS', '46-60 FPS'];
+                }
+                break;
+                
+            case 'scatter':
+                // For scatter plot, prepare coordinates
+                const newScatterData = newDataPoints.map((fps, index) => ({
+                    x: index,
+                    y: fps
+                }));
+                
+                chart.data.datasets[0].data = newScatterData;
+                break;
+                
+            case 'histogram':
+                // For histogram, create bins
+                const binCount = 10;
+                const minFPS = Math.min(...newDataPoints);
+                const maxFPS = Math.max(...newDataPoints);
+                const binSize = (maxFPS - minFPS) / binCount;
+                
+                const bins = Array(binCount).fill(0);
+                newDataPoints.forEach(fps => {
+                    const binIndex = Math.min(Math.floor((fps - minFPS) / binSize), binCount - 1);
+                    bins[binIndex]++;
+                });
+                
+                chart.data.labels = bins.map((_, i) => {
+                    const start = (minFPS + i * binSize).toFixed(1);
+                    const end = (minFPS + (i + 1) * binSize).toFixed(1);
+                    return `${start}-${end}`;
+                });
+                
+                chart.data.datasets[0].data = bins;
+                break;
+        }
+        
+        // Update chart
+        chart.update();
+    }
+
+    // Function to update statistics
+    function updateStats(avg, min, max) {
+        // Ensure the values are numbers before calling toFixed
+        const avgNum = typeof avg === 'number' ? avg : parseFloat(avg) || 0;
+        const minNum = typeof min === 'number' ? min : parseFloat(min) || 0;
+        const maxNum = typeof max === 'number' ? max : parseFloat(max) || 0;
+        
+        document.getElementById('avg-fps').textContent = avgNum.toFixed(2);
+        document.getElementById('min-fps').textContent = minNum.toFixed(2);
+        document.getElementById('max-fps').textContent = maxNum.toFixed(2);
+    }
+
+    // Function to refresh chart data
+    function refreshChart() {
         // Get current parameters
         const urlParams = new URLSearchParams(window.location.search);
         const limit = urlParams.get('limit') || '100';
         const pageUrl = urlParams.get('page_url');
         const sessionId = urlParams.get('session_id');
         
-        // Reload content with current parameters
-        const refreshUrl = `chart_modal.php?limit=${limit}${pageUrl ? '&page_url=' + encodeURIComponent(pageUrl) : ''}${sessionId ? '&session_id=' + encodeURIComponent(sessionId) : ''}${currentChartType ? '&chart_type=' + currentChartType : ''}`;
+        // Build query string
+        let queryString = `?limit=${limit}`;
+        if (pageUrl) queryString += `&page_url=${encodeURIComponent(pageUrl)}`;
+        if (sessionId) queryString += `&session_id=${encodeURIComponent(sessionId)}`;
+        queryString += `&chart_type=${chartType}`;
         
-        // Get the modal body element (assuming it's available in parent context)
-        if (typeof $ !== 'undefined') {
-            $.get(refreshUrl, function(data) {
-                $('.modal-body').html(data);
-            }).fail(function() {
-                alert('Error refreshing chart data');
+        // Show loading indicator
+        const refreshButton = document.getElementById('refresh-chart');
+        const originalText = refreshButton.textContent;
+        refreshButton.textContent = 'Refreshing...';
+        refreshButton.disabled = true;
+        
+        // Fetch new data from the dedicated endpoint
+        fetch(`get_fps_data.php${queryString}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(newData => {
+                // Check if there was an error returned by the server
+                if (newData.error) {
+                    console.error('Server error:', newData.error);
+                    alert(`Server error: ${newData.error}`);
+                    return;
+                }
+                
+                // Update chart with new data
+                updateChart(newData.data);
+                
+                // Update statistics
+                updateStats(newData.avg_fps, newData.min_fps, newData.max_fps);
+                
+                console.log('Chart refreshed successfully');
+            })
+            .catch(error => {
+                console.error('Error fetching new data:', error);
+                alert(`Error refreshing chart data: ${error.message}`);
+            })
+            .finally(() => {
+                // Restore button state
+                refreshButton.textContent = originalText;
+                refreshButton.disabled = false;
             });
-        } else {
-            // Fallback to location reload if jQuery not available
-            location.reload();
-        }
-    });
+    }
+
+    // Refresh button functionality
+    document.getElementById('refresh-chart')?.addEventListener('click', refreshChart);
     
     // Modal functionality
     if (typeof $ !== 'undefined') {
