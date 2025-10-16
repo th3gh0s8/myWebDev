@@ -388,7 +388,7 @@ $conn->close();
                 const limit = $('#limit').val();
                 const pageUrl = $('#page_url_filter').val();
                 const sessionId = $('#session_id_filter').val();
-                const chartType = $('#chart-type').val(); // Get the selected chart type
+                const chartType = $('#chart-type') ? $('#chart-type').val() : 'line'; // Get the selected chart type, default to 'line'
 
                 // Build URL for chart page with current filters
                 let chartUrl = 'chart_modal.php';
@@ -405,15 +405,19 @@ $conn->close();
 
                 // Load the modal content via AJAX
                 $.get(chartUrl, function(data) {
-                    $('#chartModal .modal-body').html(data);
+                    // Clear the modal body and add the new content
+                    $('#chartModal .modal-body').empty().html(data);
                     $('#chartModal').show();
                     
-                    // Reinitialize Chart.js after content is loaded
+                    // Trigger a custom event to notify that new chart content has been loaded
+                    $(document).trigger('chartContentLoaded');
+                    
+                    // If the chart initialization function exists in the loaded content, call it
                     setTimeout(function() {
-                        if (typeof Chart !== 'undefined') {
-                            // Charts will be initialized by the loaded content
+                        if (typeof window.initializeModalChart === 'function') {
+                            window.initializeModalChart();
                         }
-                    }, 100);
+                    }, 150); // Slight delay to ensure content is fully rendered
                 }).fail(function() {
                     alert('Error loading chart data');
                 });
@@ -423,12 +427,27 @@ $conn->close();
             $('.close, #chartModal').click(function(e) {
                 if (e.target === this || $(e.target).hasClass('close')) {
                     $('#chartModal').hide();
+                    
+                    // Destroy any existing chart instance to prevent memory leaks
+                    if (window.currentChart && typeof window.currentChart.destroy === 'function') {
+                        window.currentChart.destroy();
+                    }
+                    window.currentChart = null;
+                    
+                    // Clear the modal content to ensure it's fresh when reopened
+                    $('#chartModal .modal-body').empty();
                 }
             });
             
             // Prevent modal content from closing when clicked
             $('.modal-content').click(function(e) {
                 e.stopPropagation();
+            });
+
+            // Handle chart content loading event
+            $(document).on('chartContentLoaded', function() {
+                // The chart will be initialized by the script in chart_modal.php
+                // but we can add any additional handling here if needed
             });
 
             // Sorting functionality
