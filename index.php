@@ -304,6 +304,13 @@ $conn->close();
                 <div class="control-group">
                     <button id="apply-filters">Apply Filters</button>
                     <button id="reset-filters">Reset</button>
+                    <select id="chart-type" style="padding: 8px; border: 1px solid #ddd; border-radius: 3px; min-width: 120px;">
+                        <option value="line">Line Chart</option>
+                        <option value="bar">Bar Chart</option>
+                        <option value="pie">Pie Chart</option>
+                        <option value="scatter">Scatter Plot</option>
+                        <option value="histogram">Histogram</option>
+                    </select>
                     <button id="view-charts" class="view-charts-btn">View Charts</button>
                 </div>
             </div>
@@ -388,7 +395,7 @@ $conn->close();
                 const limit = $('#limit').val();
                 const pageUrl = $('#page_url_filter').val();
                 const sessionId = $('#session_id_filter').val();
-                const chartType = $('#chart-type') ? $('#chart-type').val() : 'line'; // Get the selected chart type, default to 'line'
+                const chartType = $('#chart-type').val() || 'line'; // Get the selected chart type, default to 'line'
 
                 // Build URL for chart page with current filters
                 let chartUrl = 'chart_modal.php';
@@ -397,7 +404,7 @@ $conn->close();
                 if (limit) params.push('limit=' + limit);
                 if (pageUrl) params.push('page_url=' + encodeURIComponent(pageUrl));
                 if (sessionId) params.push('session_id=' + encodeURIComponent(sessionId));
-                if (chartType) params.push('chart_type=' + encodeURIComponent(chartType)); // Add chart type
+                params.push('chart_type=' + encodeURIComponent(chartType)); // Include chart type in URL
 
                 if (params.length > 0) {
                     chartUrl += '?' + params.join('&');

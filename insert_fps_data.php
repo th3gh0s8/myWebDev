@@ -81,7 +81,7 @@ function insertSampleData($conn, $data) {
         $page_url = $row['page_url'];
         $user_id = $row['user_id'];
         
-        $stmt->bind_param("sdsii", $timestamp, $fps_value, $session_id, $page_url, $user_id);
+        $stmt->bind_param("sdssi", $timestamp, $fps_value, $session_id, $page_url, $user_id);
         
         if ($stmt->execute()) {
             $successCount++;

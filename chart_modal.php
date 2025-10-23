@@ -28,7 +28,7 @@ function fetchFPSData($conn, $limit = 100, $page_url = null, $session_id = null)
     if ($stmt) {
         // Bind parameters dynamically
         if (!empty($params)) {
-            $types = str_repeat('s', count($params) - 1) . 'i'; // Last param is always int (limit)
+            $types = str_repeat('s', count($params));
             $stmt->bind_param($types, ...$params);
         } else {
             $stmt->bind_param('i', $limit);
@@ -54,6 +54,13 @@ function fetchFPSData($conn, $limit = 100, $page_url = null, $session_id = null)
 $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 100;
 $page_url = isset($_GET['page_url']) ? $_GET['page_url'] : null;
 $session_id = isset($_GET['session_id']) ? $_GET['session_id'] : null;
+$chart_type = isset($_GET['chart_type']) ? $_GET['chart_type'] : 'line';
+
+// Validate chart type to prevent security issues
+$allowed_chart_types = ['line', 'bar', 'pie', 'scatter', 'histogram'];
+if (!in_array($chart_type, $allowed_chart_types)) {
+    $chart_type = 'line'; // default fallback
+}
 
 // Fetch FPS data
 $fps_data = fetchFPSData($conn, $limit, $page_url, $session_id);
@@ -108,9 +115,14 @@ $fps_json = json_encode($fps_data);
     // Prepare data for the charts
     const fpsData = <?php echo $fps_json; ?>;
     
-    // Get the chart type from URL parameter, default to 'line'
+    // Get the chart type from PHP variable passed to JavaScript
+    // The chart_type is determined in PHP from the URL parameter
+    const chartType = <?php echo json_encode($chart_type); ?>;
+    
+    console.log('Full URL:', window.location.href);
+    console.log('Chart type determined:', chartType); // Debugging line
     const urlParams = new URLSearchParams(window.location.search);
-    const chartType = urlParams.get('chart_type') || 'line';
+    console.log('Available URL params:', Array.from(urlParams.entries()));
 
     // Extract labels and data points
     const labels = fpsData.map(item => new Date(item.timestamp).toLocaleTimeString());
@@ -430,55 +442,75 @@ $fps_json = json_encode($fps_data);
             break;
     }
 
-    // Initialize chart immediately if DOM is already loaded, or wait for it
-    // Also ensure initialization when loaded via AJAX
+    // Initialize all charts when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initChart);
+        document.addEventListener('DOMContentLoaded', initAllCharts);
     } else {
-        // Check if we're in a modal context (loaded via AJAX)
-        // If the chart canvas is already in the DOM, initialize immediately
-        if (document.getElementById('chartCanvas')) {
-            initChart();
-        } else {
-            // If not ready, wait for DOM
-            document.addEventListener('DOMContentLoaded', initChart);
-        }
+        initAllCharts();
     }
     
     // Also provide a function to manually trigger initialization
     // This can be called from parent page when content is loaded via AJAX
     if (typeof window.initializeModalChart === 'undefined') {
         window.initializeModalChart = function() {
-            setTimeout(initChart, 100); // Slight delay to ensure DOM is ready
+            setTimeout(initAllCharts, 100); // Slight delay to ensure DOM is ready - corrected function name
         };
     }
 
-    function initChart() {
-        // First, check if a chart instance already exists and destroy it to prevent conflicts
-        if (window.currentChart && typeof window.currentChart.destroy === 'function') {
-            window.currentChart.destroy();
-        }
-        
-        // Show loading indicator
-        document.getElementById('chart-loading').style.display = 'block';
-        
-        // Wait a bit to ensure canvas is rendered
-        setTimeout(function() {
-            const chartCanvas = document.getElementById('chartCanvas');
-            if (chartCanvas) {
-                const ctx = chartCanvas.getContext('2d');
-                if (ctx) {
-                    window.currentChart = new Chart(ctx, chartConfig);
-                    // Hide loading indicator after chart is created
-                    document.getElementById('chart-loading').style.display = 'none';
-                } else {
-                    console.error('Could not get canvas context');
-                    document.getElementById('chart-loading').style.display = 'none';
-                }
-            } else {
-                console.error('Chart canvas element not found');
-                document.getElementById('chart-loading').style.display = 'none';
+    // The showChart function should not be in single-chart mode since it's for multi-chart UI
+    // This function is not used in our current single-chart implementation
+
+    function showChart(chartType) {
+        // Hide all chart containers
+        Object.values(window.chartInstances).forEach(chart => {
+            if (chart && chart.canvas) {
+                chart.canvas.style.display = 'none';
             }
+        });
+
+        // Show the selected chart
+        const chart = window.chartInstances[chartType];
+        if (chart && chart.canvas) {
+            chart.canvas.style.display = 'block';
+            window.currentChart = chart;
+        }
+    }
+
+    function initAllCharts() {
+        // Destroy any existing chart instances to prevent conflicts
+        if (window.chartInstances) {
+            Object.keys(window.chartInstances).forEach(key => {
+                if (window.chartInstances[key] && typeof window.chartInstances[key].destroy === 'function') {
+                    window.chartInstances[key].destroy();
+                }
+            });
+        }
+        window.chartInstances = {};
+
+        // Show loading indicator
+        const loadingElement = document.getElementById('chart-loading');
+        if (loadingElement) loadingElement.style.display = 'block';
+
+        // Create all chart types
+        setTimeout(function() {
+            // Line Chart
+            const lineCtx = document.getElementById('chartCanvas').getContext('2d');
+            window.chartInstances.line = new Chart(lineCtx, chartConfig);
+
+            // Hide loading indicator after all charts are created
+            if (loadingElement) loadingElement.style.display = 'none';
+            
+            // Add event listener to the chart type selector first
+            const chartTypeSelector = document.getElementById('chart-type-selector');
+            if (chartTypeSelector) {
+                chartTypeSelector.value = chartType;
+                chartTypeSelector.addEventListener('change', function() {
+                    showChart(this.value);
+                });
+            }
+            
+            // Show the initial chart type
+            showChart(chartType);
         }, 100);
     }
 
@@ -493,8 +525,8 @@ $fps_json = json_encode($fps_data);
         const newLabels = newData.map(item => new Date(item.timestamp).toLocaleTimeString());
         const newDataPoints = newData.map(item => parseFloat(item.fps_value));
 
-        // Update chart data based on chart type
-        switch(chartType) {
+        // Update chart data based on current chart type
+        switch(window.currentChart.config.type) {
             case 'line':
             case 'bar':
                 window.currentChart.data.labels = newLabels;
@@ -580,17 +612,19 @@ $fps_json = json_encode($fps_data);
 
     // Function to refresh chart data
     function refreshChart() {
-        // Get current parameters
+        // Get current parameters from the original URL
         const urlParams = new URLSearchParams(window.location.search);
         const limit = urlParams.get('limit') || '100';
         const pageUrl = urlParams.get('page_url');
         const sessionId = urlParams.get('session_id');
+        // Use the chartType that was set when the modal was loaded
+        const currentChartType = <?php echo json_encode($chart_type); ?>;
         
         // Build query string
         let queryString = `?limit=${limit}`;
         if (pageUrl) queryString += `&page_url=${encodeURIComponent(pageUrl)}`;
         if (sessionId) queryString += `&session_id=${encodeURIComponent(sessionId)}`;
-        queryString += `&chart_type=${chartType}`;
+        queryString += `&chart_type=${currentChartType}`;
         
         // Show loading indicator
         const refreshButton = document.getElementById('refresh-chart');
@@ -620,7 +654,7 @@ $fps_json = json_encode($fps_data);
                 // Update statistics
                 updateStats(newData.avg_fps, newData.min_fps, newData.max_fps);
                 
-                console.log('Chart refreshed successfully');
+                console.log('Chart refreshed successfully with type:', currentChartType);
             })
             .catch(error => {
                 console.error('Error fetching new data:', error);
