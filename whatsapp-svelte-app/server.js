@@ -1,11 +1,12 @@
-const express = require('express');
-const { Client, LocalAuth } = require('whatsapp-web.js');
-const http = require('http');
-const socketIo = require('socket.io');
+import express from 'express';
+import pkg from 'whatsapp-web.js';
+const { Client, LocalAuth } = pkg;
+import http from 'http';
+import { Server } from 'socket.io';
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server, {
+const io = new Server(server, {
   cors: {
     origin: "http://localhost:5173",
     methods: ["GET", "POST"]
