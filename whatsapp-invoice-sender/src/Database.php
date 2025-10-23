@@ -2,7 +2,11 @@
 
 class Database
 {
-    private $db_file = DB_FILE;
+    private $host = DB_HOST;
+    private $db_name = DB_NAME;
+    private $username = DB_USER;
+    private $password = DB_PASS;
+    private $port = DB_PORT;
     public $conn;
 
     public function getConnection()
@@ -10,7 +14,7 @@ class Database
         $this->conn = null;
 
         try {
-            $this->conn = new PDO("sqlite:" . $this->db_file);
+            $this->conn = new PDO("mysql:host=" . $this->host . ";port=" . $this->port . ";dbname=" . $this->db_name, $this->username, $this->password);
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $exception) {
             echo "Connection error: " . $exception->getMessage();
